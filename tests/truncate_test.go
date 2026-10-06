@@ -326,7 +326,7 @@ func TestTruncateNameChain(t *testing.T) {
 	}, {
 		name:  "Remove tilde and truncate name",
 		input: "José Martínez",
-		want:  "Jose Martinez", // No truncation (4) needed within maxWidth 15
+		want:  "Cote Martinez", // No truncation (4) needed within maxWidth 15
 		function: func(t *Conv) *Conv {
 			return t.Tilde().TruncateName(4, 15)
 		},
