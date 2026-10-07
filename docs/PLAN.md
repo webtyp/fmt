@@ -3,6 +3,8 @@ PLAN: "refactor!: fmt reduced to its minimal layer; tests moved to tests/"
 TAG: v1.1.0
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 4340317710125413898
 ---
 
 > This plan is dispatched via the CodeJob workflow. See skill: agents-workflow.
