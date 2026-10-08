@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strings" // Only for section finding in README
 	"time"
@@ -52,7 +51,7 @@ func (r *ReportGenerator) generateBinarySizeSection(binaries []BinaryInfo) (stri
 	content := Convert() // Using fmt builder for better performance
 
 	content.Write("## Binary Size Comparison\n\n")
-	content.Write("[Standard Library Example](bench-binary-size/standard-lib/main.go) | [fmt Example](bench-binary-size/tinystring-lib/main.go)\n\n")
+	content.Write("[Standard Library Example](bench-binary-size/standard-lib/main.go) | [fmt Example](bench-binary-size/webtyp-lib/main.go)\n\n")
 	content.Write("<!-- This table is automatically generated from build-and-measure.sh -->\n")
 	content.Write("*Last updated: " + time.Now().Format("2006-01-02 15:04:05") + "*\n\n")
 
@@ -68,23 +67,23 @@ func (r *ReportGenerator) generateBinarySizeSection(binaries []BinaryInfo) (stri
 	for _, opt := range optimizations {
 		// Find matching binaries for this optimization level
 		standardNative := findBinaryByPattern(binaries, "standard", "native", opt.Suffix)
-		tinystringNative := findBinaryByPattern(binaries, "tinystring", "native", opt.Suffix)
+		webtypNative := findBinaryByPattern(binaries, "webtyp", "native", opt.Suffix)
 		standardWasm := findBinaryByPattern(binaries, "standard", "wasm", opt.Suffix)
-		tinystringWasm := findBinaryByPattern(binaries, "tinystring", "wasm", opt.Suffix)
+		webtypWasm := findBinaryByPattern(binaries, "webtyp", "wasm", opt.Suffix)
 
 		// Build type icons and names
 		buildIcon := getBuildTypeIcon(opt.Name)
 		parameters := getBuildParameters(opt.Name, false)    // Native
 		wasmParameters := getBuildParameters(opt.Name, true) // WASM
 		// Native builds
-		if standardNative.Name != "" && tinystringNative.Name != "" {
-			improvementPercent := calculateImprovementPercent(standardNative.Size, tinystringNative.Size)
-			sizeDiff := standardNative.Size - tinystringNative.Size
+		if standardNative.Name != "" && webtypNative.Name != "" {
+			improvementPercent := calculateImprovementPercent(standardNative.Size, webtypNative.Size)
+			sizeDiff := standardNative.Size - webtypNative.Size
 			performanceIndicator := getPerformanceIndicator(improvementPercent)
 
 			content.Write(Sprintf("| %s **%s Native** | `%s` | %s | %s | **-%s** | %s **%.1f%%** |\n",
 				buildIcon, capitalizeFirst(opt.Name), parameters,
-				standardNative.SizeStr, tinystringNative.SizeStr,
+				standardNative.SizeStr, webtypNative.SizeStr,
 				FormatSize(sizeDiff), performanceIndicator, improvementPercent))
 
 			allImprovements = append(allImprovements, improvementPercent)
@@ -94,14 +93,14 @@ func (r *ReportGenerator) generateBinarySizeSection(binaries []BinaryInfo) (stri
 			totalSavings += sizeDiff
 		}
 		// WebAssembly builds
-		if standardWasm.Name != "" && tinystringWasm.Name != "" {
-			improvementPercent := calculateImprovementPercent(standardWasm.Size, tinystringWasm.Size)
-			sizeDiff := standardWasm.Size - tinystringWasm.Size
+		if standardWasm.Name != "" && webtypWasm.Name != "" {
+			improvementPercent := calculateImprovementPercent(standardWasm.Size, webtypWasm.Size)
+			sizeDiff := standardWasm.Size - webtypWasm.Size
 			performanceIndicator := getPerformanceIndicator(improvementPercent)
 
 			content.Write(Sprintf("| 🌐 **%s WASM** | `%s` | %s | %s | **-%s** | %s **%.1f%%** |\n",
 				capitalizeFirst(opt.Name), wasmParameters,
-				standardWasm.SizeStr, tinystringWasm.SizeStr,
+				standardWasm.SizeStr, webtypWasm.SizeStr,
 				FormatSize(sizeDiff), performanceIndicator, improvementPercent))
 
 			allImprovements = append(allImprovements, improvementPercent)
@@ -120,18 +119,18 @@ func (r *ReportGenerator) generateBinarySizeSection(binaries []BinaryInfo) (stri
 
 	for i, opt := range optimizations {
 		standardNative := findBinaryByPattern(binaries, "standard", "native", opt.Suffix)
-		tinystringNative := findBinaryByPattern(binaries, "tinystring", "native", opt.Suffix)
+		webtypNative := findBinaryByPattern(binaries, "webtyp", "native", opt.Suffix)
 		standardWasm := findBinaryByPattern(binaries, "standard", "wasm", opt.Suffix)
-		tinystringWasm := findBinaryByPattern(binaries, "tinystring", "wasm", opt.Suffix)
+		webtypWasm := findBinaryByPattern(binaries, "webtyp", "wasm", opt.Suffix)
 
-		if standardNative.Name != "" && tinystringNative.Name != "" {
-			improvement := calculateImprovementPercent(standardNative.Size, tinystringNative.Size)
+		if standardNative.Name != "" && webtypNative.Name != "" {
+			improvement := calculateImprovementPercent(standardNative.Size, webtypNative.Size)
 			avgNativeImprovement += improvement
 			nativeCount++
 		}
 
-		if standardWasm.Name != "" && tinystringWasm.Name != "" {
-			improvement := calculateImprovementPercent(standardWasm.Size, tinystringWasm.Size)
+		if standardWasm.Name != "" && webtypWasm.Name != "" {
+			improvement := calculateImprovementPercent(standardWasm.Size, webtypWasm.Size)
 			avgWasmImprovement += improvement
 			wasmCount++
 		}
@@ -176,7 +175,7 @@ func (r *ReportGenerator) generateMemorySection(comparisons []MemoryComparison) 
 	content := Convert() // Using fmt builder for better performance
 
 	content.Write("## Memory Usage Comparison\n\n")
-	content.Write("[Standard Library Example](bench-memory-alloc/standard) | [fmt Example](bench-memory-alloc/tinystring)\n\n")
+	content.Write("[Standard Library Example](bench-memory-alloc/standard) | [fmt Example](bench-memory-alloc/webtyp)\n\n")
 	content.Write("<!-- This table is automatically generated from memory-benchmark.sh -->\n")
 	content.Write("*Last updated: " + time.Now().Format("2006-01-02 15:04:05") + "*\n\n")
 	content.Write("Performance benchmarks comparing memory allocation patterns between standard Go library and fmt:\n\n")
@@ -211,11 +210,8 @@ func (r *ReportGenerator) generateMemorySection(comparisons []MemoryComparison) 
 
 			// Category with emoji
 			categoryIcon := getBenchmarkCategoryIcon(comparison.Category) // Standard library row with enhanced styling
-			// Format operation count with thousands separator
-			fmt.Println("DEBUG: Standard Iterations:", comparison.Standard.Iterations)
-
-			opCountStd := Convert(comparison.Standard.Iterations).Thousands().String()
-			opCountTiny := Convert(comparison.fmt.Iterations).Thousands().String()
+			opCountStd := Sprintf("%d", comparison.Standard.Iterations)
+			opCountTiny := Sprintf("%d", comparison.fmt.Iterations)
 
 			// Memory/op string with operation count
 			memStd := Sprintf("%s / %s OP", FormatSize(comparison.Standard.BytesPerOp), opCountStd)
@@ -343,7 +339,7 @@ func (r *ReportGenerator) updateREADMESection(sectionTitle, newContent string) e
 
 // capitalizeFirst capitalizes the first letter of a string
 func capitalizeFirst(s string) string {
-	if len(s) == 0 || HasUpperPrefix(s) {
+	if len(s) == 0 {
 		return s
 	}
 	if s[0] >= 'a' && s[0] <= 'z' {
@@ -399,11 +395,11 @@ func getBuildParameters(optName string, isWasm bool) string {
 }
 
 // calculateImprovementPercent calculates the percentage improvement
-func calculateImprovementPercent(standardSize, tinystringSize int64) float64 {
+func calculateImprovementPercent(standardSize, webtypSize int64) float64 {
 	if standardSize <= 0 {
 		return 0
 	}
-	return float64(standardSize-tinystringSize) / float64(standardSize) * 100
+	return float64(standardSize-webtypSize) / float64(standardSize) * 100
 }
 
 // getPerformanceIndicator returns the appropriate performance indicator
@@ -423,11 +419,11 @@ func getPerformanceIndicator(improvementPercent float64) string {
 // Helper functions for enhanced memory reporting
 
 // calculateMemoryPercent calculates the percentage change in memory usage
-func calculateMemoryPercent(standardValue, tinystringValue int64) float64 {
+func calculateMemoryPercent(standardValue, webtypValue int64) float64 {
 	if standardValue <= 0 {
 		return 0
 	}
-	return float64(tinystringValue-standardValue) / float64(standardValue) * 100
+	return float64(webtypValue-standardValue) / float64(standardValue) * 100
 }
 
 // getBenchmarkCategoryIcon returns appropriate icon for benchmark category
@@ -530,12 +526,12 @@ func getAllocEfficiencyClass(avgPercent float64) string {
 }
 
 // calculateMemoryImprovement formats the memory improvement as a string
-func calculateMemoryImprovement(standardValue, tinystringValue int64) string {
+func calculateMemoryImprovement(standardValue, webtypValue int64) string {
 	if standardValue <= 0 {
 		return "N/A"
 	}
 
-	percent := float64(standardValue-tinystringValue) / float64(standardValue) * 100
+	percent := float64(standardValue-webtypValue) / float64(standardValue) * 100
 	if percent > 0 {
 		return Sprintf("%.1f%% less", percent)
 	} else if percent < 0 {

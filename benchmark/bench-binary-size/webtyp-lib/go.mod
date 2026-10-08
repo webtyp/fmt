@@ -1,4 +1,4 @@
-module tinystring-example
+module webtyp-example
 
 go 1.25.2
 

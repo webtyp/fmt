@@ -7,7 +7,7 @@
 
 ## Problem
 
-`tinystring.Fmt()` returns empty string when formatting custom types with `%s`, even if they implement `String()` method. This breaks compatibility with standard `fmt.Sprintf()` behavior.
+`webtyp.Fmt()` returns empty string when formatting custom types with `%s`, even if they implement `String()` method. This breaks compatibility with standard `fmt.Sprintf()` behavior.
 
 ## Root Cause
 
@@ -78,7 +78,7 @@ case 's':
 
 ## Testing
 
-Run: `cd tinystring && go test -v -run TestFmtWithCustomTypeString`
+Run: `cd webtyp/fmt && go test -v -run TestFmtWithCustomTypeString`
 
 Expected after fix:
 - ✅ `customType("1.3")` with `%s` → "1.3"
@@ -99,7 +99,7 @@ Expected after fix:
 
 ## Files to Modify
 
-1. `tinystring/fmt_template.go` - line 426-433 (formatValue case 's')
+1. `webtyp/fmt_template.go` - line 426-433 (formatValue case 's')
 2. Verify all tests pass: `go test ./...`
 
 ## Notes

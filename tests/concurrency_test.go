@@ -1,9 +1,10 @@
-package fmt
+package fmt_test
 
 import (
 	"sync"
 	"testing"
 	"time"
+	. "webtyp.com/fmt"
 )
 
 // safeCounter provides thread-safe counting for detecting errors
@@ -25,8 +26,8 @@ func (c *safeCounter) addError(msg string) {
 func TestConcurrentConvert(t *testing.T) {
 	const (
 		numGoroutines  = 200 // Reduced from 1000 to prevent resource exhaustion
-		testString     = "Él Múrcielago Rápido"
-		expectedResult = "elMurcielagoRapido"
+		testString     = "El Murcielago Rapido"
+		expectedResult = "ElMurcielagoRapido"
 	)
 
 	var wg sync.WaitGroup
@@ -46,8 +47,7 @@ func TestConcurrentConvert(t *testing.T) {
 		go func(id int) {
 			defer wg.Done()
 			out := Convert(testString).
-				Tilde().
-				CamelLow().
+				CamelUp().
 				String()
 
 			if out != expectedResult {
@@ -60,7 +60,7 @@ func TestConcurrentConvert(t *testing.T) {
 	select {
 	case <-done:
 		if counter.count > 0 {
-			// Join errors using tinystring instead of strings.Join
+			// Join errors using webtyp instead of strings.Join
 			var errorStr string
 			for i, err := range counter.errs {
 				if i > 0 {
@@ -92,13 +92,6 @@ func TestConcurrentUtilityFunctions(t *testing.T) {
 				return out[1], nil
 			},
 			expected: "banana",
-		},
-		{
-			name: "ExtractValue",
-			function: func() (string, error) {
-				return Convert("user:admin").ExtractValue(":")
-			},
-			expected: "admin",
 		},
 		{
 			name: "Contains",
@@ -181,11 +174,10 @@ func TestConcurrentStringManipulation(t *testing.T) {
 	}{
 		{
 			name:  "Complex Transformation 1",
-			input: "  User-Name With Áccents  ",
+			input: "  User-Name With Accents  ",
 			process: func(s string) string {
 				return Convert(s).
 					TrimSpace().
-					Tilde().
 					Replace(" ", "_").
 					Replace("-", "_").
 					ToLower().
@@ -278,14 +270,6 @@ func TestConcurrentNumericOperations(t *testing.T) {
 			expected: "12345",
 		},
 		{
-			name: "Thousands Operation (EU)",
-			function: func() (string, error) {
-				out := Convert(1234567).Thousands().String()
-				return out, nil
-			},
-			expected: "1.234.567",
-		},
-		{
 			name: "Bool Conversion",
 			function: func() (string, error) {
 				val, err := Convert("true").Bool()
@@ -305,23 +289,6 @@ func TestConcurrentNumericOperations(t *testing.T) {
 				return out, nil
 			},
 			expected: "123.46",
-		},
-		{
-			name: "Round Down Operation",
-			function: func() (string, error) {
-				c := Convert(123.456789)
-				c.Round(2, true)
-				out := c.String()
-				return out, nil
-			},
-			expected: "123.45",
-		}, {
-			name: "Thousands Operation",
-			function: func() (string, error) {
-				out := Convert(1234567).Thousands(true).String()
-				return out, nil
-			},
-			expected: "1,234,567",
 		},
 	}
 
@@ -386,15 +353,14 @@ func TestConcurrentStringPointerOperations(t *testing.T) {
 				defer wg.Done()
 
 				// Each goroutine works with its own string pointer
-				originalText := "Él Múrcielago Rápido"
+				originalText := "El Murcielago Rapido"
 				testText := originalText
 
 				Convert(&testText).
-					Tilde().
-					CamelLow().
+					CamelUp().
 					Apply()
 
-				expected := "elMurcielagoRapido"
+				expected := "ElMurcielagoRapido"
 				if testText != expected {
 					counter.addError(Sprintf("goroutine %d: got %q, want %q", id, testText, expected))
 				}
@@ -446,7 +412,7 @@ func TestConcurrentFormattingOperations(t *testing.T) {
 		{
 			name: "Quote Operation",
 			function: func() string {
-				return Convert("Hello \"World\"").Quote().String()
+				return Sprintf("%q", "Hello \"World\"")
 			},
 			expected: "\"Hello \\\"World\\\"\"",
 		},
@@ -505,7 +471,7 @@ func TestConcurrentAdvancedCaseOperations(t *testing.T) {
 			},
 			expected: "hello_world_test",
 		}, {
-			name: "SnakeUp",
+			name: "SnakeLow then ToUpper",
 			function: func() string {
 				return Convert("HelloWorldTest").SnakeLow().ToUpper().String()
 			},
@@ -570,7 +536,7 @@ func TestConcurrentAdvancedCaseOperations(t *testing.T) {
 	}
 }
 
-// TestConcurrentTruncateOperations tests Truncate and TruncateName operations
+// TestConcurrentTruncateOperations tests Truncate
 // under concurrent access patterns.
 func TestConcurrentTruncateOperations(t *testing.T) {
 	const numGoroutines = 80
@@ -586,19 +552,6 @@ func TestConcurrentTruncateOperations(t *testing.T) {
 				return Convert("This is a very long string that needs truncation").Truncate(20).String()
 			},
 			expected: "This is a very lo...",
-		},
-		{
-			name: "Truncate With Reserved Chars",
-			function: func() string {
-				return Convert("This is a long string").Truncate(15, 5).String()
-			},
-			expected: "This is...",
-		}, {
-			name: "TruncateName",
-			function: func() string {
-				return Convert("VeryLongFirstName VeryLongLastName").TruncateName(8, 20).String()
-			},
-			expected: "VeryLong. VeryLon...",
 		},
 	}
 
@@ -735,7 +688,7 @@ func TestRaceConditionInComplexChaining(t *testing.T) {
 
 		// Shared test data for high contention scenarios
 		testInputs := []string{
-			"Él Múrcielago Rápido",
+			"El Murcielago Rapido",
 			"JAVASCRIPT TYPESCRIPT",
 			"user_name_with_underscores",
 			"CamelCaseString",
@@ -767,7 +720,6 @@ func TestRaceConditionInComplexChaining(t *testing.T) {
 
 					// Complex chaining operation that exercises multiple code paths
 					out := Convert(input).
-						Tilde().
 						TrimSpace().
 						Replace("_", " ").
 						Replace("  ", " "). // Remove double spaces
@@ -909,7 +861,7 @@ func TestConcurrentStringCacheStress(t *testing.T) {
 					// Mix of operations that trigger string interning
 					operations := []func() string{
 						func() string { return Sprintf("ID_%d_ITER_%d", id, j) },
-						func() string { return Convert(id).Thousands().String() },
+						func() string { return Sprintf("%d", id) },
 						func() string { return Convert(Sprintf("goroutine_%d", id)).ToUpper().String() },
 						func() string { return Sprintf("%.2f", float64(j)/10.0) },
 						func() string { return Convert("cache_test").Repeat(2).String() },

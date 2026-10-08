@@ -13,7 +13,7 @@ type BinaryInfo struct {
 	Size     int64
 	SizeStr  string
 	Type     string // "native" or "wasm"
-	Library  string // "standard" or "tinystring"
+	Library  string // "standard" or "webtyp"
 	OptLevel string // "default", "ultra", "speed", "debug"
 }
 
@@ -77,8 +77,8 @@ func FindBinaries(dir string, patterns []string) ([]BinaryInfo, error) {
 
 				if Contains(path, "standard") {
 					binary.Library = "standard"
-				} else if Contains(path, "tinystring") {
-					binary.Library = "tinystring"
+				} else if Contains(path, "webtyp") {
+					binary.Library = "webtyp"
 				}
 
 				binaries = append(binaries, binary)

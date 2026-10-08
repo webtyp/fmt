@@ -1,6 +1,9 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 func TestQuote(t *testing.T) {
 	tests := []struct {
@@ -52,38 +55,28 @@ func TestQuote(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			out := Convert(tt.input).Quote().String()
+			out := Sprintf("%q", tt.input)
 			if out != tt.expected {
-				t.Errorf("Quote() = %q, want %q", out, tt.expected)
+				t.Errorf("Sprintf(%%q) = %s, want %s", out, tt.expected)
 			}
 		})
 	}
 }
 
-func TestQuoteWithError(t *testing.T) {
-	// Test quote functionality with error handling
-	out, err := Convert("test").Quote().StringErr()
-	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
+// A non-string value is quoted in its string form (unlike Go, on purpose):
+// what the old Convert(x).Quote() returned.
+func TestQuoteNonString(t *testing.T) {
+	cases := []struct {
+		in   any
+		want string
+	}{
+		{123, `"123"`},
+		{true, `"true"`},
+		{1.5, `"1.5"`},
 	}
-	expected := `"test"`
-	if out != expected {
-		t.Errorf("Quote() = %q, want %q", out, expected)
-	}
-}
-
-func TestQuoteChaining(t *testing.T) {
-	// Test chaining quote with other operations
-	out := Convert("hello").Quote().String()
-	expected := `"hello"`
-	if out != expected {
-		t.Errorf("Quote chaining = %q, want %q", out, expected)
-	}
-
-	// Test quote after conversion
-	result2 := Convert(123).Quote().String()
-	expected2 := `"123"`
-	if result2 != expected2 {
-		t.Errorf("Quote after conversion = %q, want %q", result2, expected2)
+	for _, c := range cases {
+		if got := Sprintf("%q", c.in); got != c.want {
+			t.Errorf("Sprintf(%%q, %v) = %s, want %s", c.in, got, c.want)
+		}
 	}
 }

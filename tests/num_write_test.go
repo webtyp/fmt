@@ -1,7 +1,8 @@
-package fmt
+package fmt_test
 
 import (
 	"testing"
+	. "webtyp.com/fmt"
 )
 
 func TestWriteInt(t *testing.T) {

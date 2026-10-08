@@ -10,7 +10,7 @@ memory-bench/
 │   ├── main.go        # Main program with standard library operations  
 │   ├── main_test.go   # Benchmark tests for standard library
 │   └── go.mod         # Go module without external dependencies
-└── tinystring/         # fmt implementation
+└── webtyp/         # fmt implementation
     ├── main.go        # Main program with fmt operations
     ├── main_test.go   # Benchmark tests for fmt (including pointer optimization)
     └── go.mod         # Go module with fmt dependency
@@ -41,11 +41,11 @@ memory-bench/
 cd standard && go test -bench=. -benchmem
 
 # Run only fmt benchmarks  
-cd tinystring && go test -bench=. -benchmem
+cd webtyp && go test -bench=. -benchmem
 
 # Compare specific benchmark
 cd standard && go test -bench=BenchmarkStringProcessing -benchmem
-cd ../tinystring && go test -bench=BenchmarkStringProcessing -benchmem
+cd ../webtyp && go test -bench=BenchmarkStringProcessing -benchmem
 ```
 
 ## Benchmark Output Fmt

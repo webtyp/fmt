@@ -1,6 +1,40 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
+
+// kindNames is the expected String() of each Kind, in declaration order.
+var kindNames = []string{
+	"invalid",
+	"bool",
+	"int",
+	"int8",
+	"int16",
+	"int32",
+	"int64",
+	"uint",
+	"uint8",
+	"uint16",
+	"uint32",
+	"uint64",
+	"uintptr",
+	"float32",
+	"float64",
+	"complex64",
+	"complex128",
+	"array",
+	"chan",
+	"func",
+	"interface",
+	"map",
+	"ptr",
+	"slice",
+	"string",
+	"struct",
+	"unsafe.Pointer",
+}
 
 func TestKindString(t *testing.T) {
 	// Build a slice of all Kind values from the Kind struct, matching the new order

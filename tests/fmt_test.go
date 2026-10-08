@@ -1,72 +1,9 @@
-package fmt
+package fmt_test
 
-import "testing"
-
-func TestFormatNumber(t *testing.T) {
-	tests := []struct {
-		name  string
-		input any
-		want  string
-	}{
-		{
-			name:  "Fmt integer with thousand separators (EU)",
-			input: 2189009,
-			want:  "2.189.009",
-		},
-		{
-			name:  "Fmt decimal number with trailing zeros (EU)",
-			input: 2189009.00,
-			want:  "2.189.009",
-		},
-		{
-			name:  "Fmt decimal number (EU)",
-			input: 2189009.123,
-			want:  "2.189.009,123",
-		},
-		{
-			name:  "Fmt string number (EU)",
-			input: "2189009.00",
-			want:  "2.189.009",
-		},
-		{
-			name:  "Fmt negative number (EU)",
-			input: -2189009,
-			want:  "-2.189.009",
-		},
-		{
-			name:  "Fmt small number",
-			input: 123,
-			want:  "123",
-		},
-		{
-			name:  "Fmt zero",
-			input: 0,
-			want:  "0",
-		},
-		{
-			name:  "Non-numeric input",
-			input: "hello",
-			want:  "hello",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			out := Convert(tt.input).Thousands().String()
-			if out != tt.want {
-				t.Errorf("Thousands() got = %v, want %v", out, tt.want)
-			}
-		})
-	}
-
-	// Anglo format tests
-	t.Run("Fmt integer with thousand separators (Anglo)", func(t *testing.T) {
-		out := Convert(2189009).Thousands(true).String()
-		if out != "2,189,009" {
-			t.Errorf("Thousands(true) got = %v, want %v", out, "2,189,009")
-		}
-	})
-}
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 func TestFormat(t *testing.T) {
 	tests := []struct {

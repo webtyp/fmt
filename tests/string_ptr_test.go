@@ -1,8 +1,9 @@
-package fmt
+package fmt_test
 
 import (
 	std_fmt "fmt"
 	"testing"
+	. "webtyp.com/fmt"
 )
 
 func TestStringPointer(t *testing.T) {
@@ -13,36 +14,12 @@ func TestStringPointer(t *testing.T) {
 		expectedValue string
 	}{
 		{
-			name:         "Remove tildes from string pointer",
-			initialValue: "áéíóúÁÉÍÓÚ",
-			transform: func(t *Conv) *Conv {
-				return t.Tilde()
-			},
-			expectedValue: "aeiouAEIOU",
-		},
-		{
 			name:         "Convert to lowercase with string pointer",
 			initialValue: "HELLO WORLD",
 			transform: func(t *Conv) *Conv {
 				return t.ToLower()
 			},
 			expectedValue: "hello world",
-		},
-		{
-			name:         "Convert to camelCase with string pointer",
-			initialValue: "hello world example",
-			transform: func(t *Conv) *Conv {
-				return t.CamelLow()
-			},
-			expectedValue: "helloWorldExample",
-		},
-		{
-			name:         "Multiple transforms with string pointer",
-			initialValue: "Él Múrcielago Rápido",
-			transform: func(t *Conv) *Conv {
-				return t.Tilde().CamelLow()
-			},
-			expectedValue: "elMurcielagoRapido",
 		},
 	}
 	for _, tt := range tests {
@@ -64,11 +41,11 @@ func TestStringPointer(t *testing.T) {
 // Estos ejemplos ilustran cómo usar los punteros a strings para evitar asignaciones adicionales
 func Example_stringPointerBasic() {
 	// Creamos una variable string que queremos modificar
-	myText := "héllô wórld"
+	myText := "HELLO World"
 
 	// En lugar de crear una nueva variable con el resultado,
 	// modificamos directamente la variable original usando Apply()
-	Convert(&myText).Tilde().ToLower().Apply()
+	Convert(&myText).ToLower().Apply()
 
 	// La variable original ha sido modificada
 	std_fmt.Println(myText)
@@ -77,14 +54,14 @@ func Example_stringPointerBasic() {
 
 func Example_stringPointerCamelCase() {
 	// Ejemplo de uso con múltiples transformaciones
-	originalText := "Él Múrcielago Rápido"
+	originalText := "el murcielago rapido"
 
 	// Las transformaciones modifican la variable original directamente
 	// usando el método Apply() para actualizar el puntero
-	Convert(&originalText).Tilde().CamelLow().Apply()
+	Convert(&originalText).CamelUp().Apply()
 
 	std_fmt.Println(originalText)
-	// Output: elMurcielagoRapido
+	// Output: ElMurcielagoRapido
 }
 
 func Example_stringPointerEfficiency() {
@@ -92,12 +69,12 @@ func Example_stringPointerEfficiency() {
 	// puede ser importante para evitar la presión sobre el garbage collector
 	// Método tradicional (crea nuevas asignaciones de memoria)
 	traditionalText := "Texto con ACENTOS"
-	processedText := Convert(traditionalText).Tilde().ToLower().String()
+	processedText := Convert(traditionalText).ToLower().String()
 	std_fmt.Println(processedText)
 
 	// Método con punteros (modifica directamente la variable original)
 	directText := "Otro TEXTO con ACENTOS"
-	Convert(&directText).Tilde().ToLower().Apply()
+	Convert(&directText).ToLower().Apply()
 	std_fmt.Println(directText)
 
 	// Output:

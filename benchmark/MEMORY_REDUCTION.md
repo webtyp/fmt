@@ -30,9 +30,9 @@ TinyGo configures WebAssembly **linear memory** with minimal initial size (2 pag
 
 | **Standard Library** | **Issue** | **fmt Solution** |
 |---------------------|-----------|-------------------------|
-| `fmt.Sprintf("Value: %d", num)` | Parsing + reflection overhead | `tinystring.Fmt("Value: %d", num)` - Direct implementation |
-| `strings.Builder` concatenation | Still uses standard library internally | `tinystring.Convert().Join()` - Manual implementation |
-| `strconv.Itoa(num)` | Standard library dependency | `tinystring.Convert(num).String()` - Zero dependencies |
+| `fmt.Sprintf("Value: %d", num)` | Parsing + reflection overhead | `webtyp.Fmt("Value: %d", num)` - Direct implementation |
+| `strings.Builder` concatenation | Still uses standard library internally | `webtyp.Convert().Join()` - Manual implementation |
+| `strconv.Itoa(num)` | Standard library dependency | `webtyp.Convert(num).String()` - Zero dependencies |
 | `string(bytes)` / `[]byte(string)` | Duplicates data | Use `unsafe.String()` / `unsafe.SliceData()` |
 | String concatenation (`s1 + s2`) | Creates new string | Use fmt chaining methods |
 
@@ -44,7 +44,7 @@ TinyGo configures WebAssembly **linear memory** with minimal initial size (2 pag
 result := fmt.Sprintf("User: %s, Age: %d", name, age)
 
 // ✅ fmt (optimized, zero dependencies)
-result := tinystring.Fmt("User: %s, Age: %d", name, age)
+result := webtyp.Fmt("User: %s, Age: %d", name, age)
 ```
 
 ### 2. Replace `strconv` with fmt Conversion
@@ -54,8 +54,8 @@ numStr := strconv.Itoa(42)
 floatStr := strconv.FormatFloat(3.14, 'f', 2, 64)
 
 // ✅ fmt  
-numStr := tinystring.Convert(42).String()
-floatStr := tinystring.Convert(3.14).Round(2).String()
+numStr := webtyp.Convert(42).String()
+floatStr := webtyp.Convert(3.14).Round(2).String()
 ```
 
 ### 3. Replace `strings` Operations with fmt Chaining
@@ -66,15 +66,15 @@ parts := strings.Split(input, ",")
 joined := strings.Join(parts, "|")
 
 // ✅ fmt (single chain, fewer allocations)
-result := tinystring.Convert(input).TrimSpace().ToUpper().String()
-joined := tinystring.Convert(input).Split(",").Join("|")
+result := webtyp.Convert(input).TrimSpace().ToUpper().String()
+joined := webtyp.Convert(input).Split(",").Join("|")
 ```
 
 ### 4. In-Place String Modification (Unique to fmt)
 ```go
 // ✅ fmt exclusive feature - modify original string
 text := "hello world"
-tinystring.Convert(&text).ToUpper().Tilde().Apply()
+webtyp.Convert(&text).ToUpper().Tilde().Apply()
 // text is now modified directly: "HELLO WORLD"
 ```
 
@@ -132,8 +132,8 @@ go test -benchmem -bench=.
 
 ## Key Recommendations for fmt Migration
 
-1. **Replace `fmt.Sprintf`** with `tinystring.Fmt()` for all string formatting
-2. **Replace `strconv` conversions** with `tinystring.Convert()` methods
+1. **Replace `fmt.Sprintf`** with `webtyp.Fmt()` for all string formatting
+2. **Replace `strconv` conversions** with `webtyp.Convert()` methods
 3. **Replace `strings` operations** with fmt's chainable methods
 4. **Use pointer modification** with `Apply()` to avoid allocations entirely
 5. **Leverage fmt's numeric handling** for formatting and rounding

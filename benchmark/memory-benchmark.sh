@@ -25,8 +25,8 @@ STANDARD_RESULTS=$(go test -bench=. -benchmem | grep -E '^Benchmark')
 
 # Run fmt benchmarks
 echo "📊 Running fmt benchmarks..."
-cd "$MEMORY_BENCH_DIR/tinystring"
-TINYSTRING_RESULTS=$(go test -bench=. -benchmem | grep -E '^Benchmark')
+cd "$MEMORY_BENCH_DIR/webtyp"
+WEBTYP_RESULTS=$(go test -bench=. -benchmem | grep -E '^Benchmark')
 
 # Generate memory benchmark section for README
 echo "📝 Generating memory benchmark results..."
@@ -46,7 +46,7 @@ Standard Library:
 $STANDARD_RESULTS
 
 fmt:
-$TINYSTRING_RESULTS
+$WEBTYP_RESULTS
 \`\`\`
 
 ### Performance Analysis

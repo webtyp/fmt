@@ -19,7 +19,7 @@ func Errf(format string, args ...any) *Conv {
 }
 
 // StringErr returns the content of the Conv along with any error and auto-releases to pool
-func (c *Conv) StringErr() (out string, err error) {
+func (c *Conv) stringErr() (out string, err error) {
 	// If there's an error, return empty string and the error object (do NOT release to pool)
 	if c.hasContent(BuffErr) {
 		return "", c
@@ -49,11 +49,16 @@ func (c *Conv) wrErr(msgs ...any) *Conv {
 			c.ResetBuffer(BuffWork)
 			var val int64
 			switch i := v.(type) {
-			case int: val = int64(i)
-			case int8: val = int64(i)
-			case int16: val = int64(i)
-			case int32: val = int64(i)
-			case int64: val = i
+			case int:
+				val = int64(i)
+			case int8:
+				val = int64(i)
+			case int16:
+				val = int64(i)
+			case int32:
+				val = int64(i)
+			case int64:
+				val = i
 			}
 			c.WrIntBase(BuffWork, val, 10, true, false)
 			c.WrString(BuffErr, c.GetString(BuffWork))
@@ -61,11 +66,16 @@ func (c *Conv) wrErr(msgs ...any) *Conv {
 			c.ResetBuffer(BuffWork)
 			var val uint64
 			switch i := v.(type) {
-			case uint: val = uint64(i)
-			case uint8: val = uint64(i)
-			case uint16: val = uint64(i)
-			case uint32: val = uint64(i)
-			case uint64: val = i
+			case uint:
+				val = uint64(i)
+			case uint8:
+				val = uint64(i)
+			case uint16:
+				val = uint64(i)
+			case uint32:
+				val = uint64(i)
+			case uint64:
+				val = i
 			}
 			c.wrUintBase(BuffWork, val, 10)
 			c.WrString(BuffErr, c.GetString(BuffWork))

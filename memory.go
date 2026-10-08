@@ -114,7 +114,7 @@ func (c *Conv) GetString(dest BuffDest) string {
 // GetStringZeroCopy returns string content without heap allocation
 // UNSAFE: Returned string shares underlying buffer - do not modify buffer after calling
 // SAFE for: Immediate use where buffer is not modified until string is no longer needed
-func (c *Conv) GetStringZeroCopy(dest BuffDest) string {
+func (c *Conv) getStringZeroCopy(dest BuffDest) string {
 	data := c.GetBytes(dest)
 	if len(data) == 0 {
 		return ""
@@ -190,25 +190,6 @@ func (c *Conv) swapBuff(src, dest BuffDest) {
 	c.ResetBuffer(src)
 }
 
-// addRuneToWork encodes rune to UTF-8 and appends to work buffer
-func (c *Conv) addRuneToWork(r rune) {
-	// Manually encode rune to UTF-8 in work buffer
-	if r < 0x80 {
-		// Single byte ASCII
-		c.work = append(c.work, byte(r))
-	} else if r < 0x800 {
-		// Two bytes
-		c.work = append(c.work, 0xC0|byte(r>>6), 0x80|byte(r&0x3F))
-	} else if r < 0x10000 {
-		// Three bytes
-		c.work = append(c.work, 0xE0|byte(r>>12), 0x80|byte((r>>6)&0x3F), 0x80|byte(r&0x3F))
-	} else {
-		// Four bytes
-		c.work = append(c.work, 0xF0|byte(r>>18), 0x80|byte((r>>12)&0x3F), 0x80|byte((r>>6)&0x3F), 0x80|byte(r&0x3F))
-	}
-	c.workLen = len(c.work)
-}
-
 // bytesEqual compares buffer content with given bytes slice for optimization
 // This helper eliminates GetString() allocations in boolean/comparison operations
 func (c *Conv) bytesEqual(dest BuffDest, target []byte) bool {
@@ -238,37 +219,4 @@ func (c *Conv) bytesEqual(dest BuffDest, target []byte) bool {
 		}
 	}
 	return true
-}
-
-// bufferContainsPattern checks if any pattern is present in the buffer (no allocations)
-func (c *Conv) bufferContainsPattern(dest BuffDest, patterns [][]byte) bool {
-	bufData := c.GetBytes(dest)
-	for _, pattern := range patterns {
-		if bytesContain(bufData, pattern) {
-			return true
-		}
-	}
-	return false
-}
-
-// bytesContain checks if needle is present in haystack (simple byte search)
-func bytesContain(haystack, needle []byte) bool {
-	n := len(needle)
-	h := len(haystack)
-	if n == 0 || h < n {
-		return false
-	}
-	for i := 0; i <= h-n; i++ {
-		match := true
-		for j := 0; j < n; j++ {
-			if haystack[i+j] != needle[j] {
-				match = false
-				break
-			}
-		}
-		if match {
-			return true
-		}
-	}
-	return false
 }

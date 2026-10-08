@@ -376,7 +376,7 @@ go tool pprof -text mem_phase13_final.prof | head -30
 
 **Memory Analysis:**
 ```bash
-cd /c/Users/Cesar/Packages/Internal/tinystring
+cd /c/Users/Cesar/Packages/Internal/webtyp
 
 # Allocation profiling
 go test -bench=BenchmarkNumberProcessing -benchmem -memprofile=mem_phase13.prof
@@ -401,7 +401,7 @@ go test -race -run TestConcurrent
 
 **Binary Size Impact:**
 ```bash
-cd benchmark/bench-binary-size/tinystring-lib
+cd benchmark/bench-binary-size/webtyp-lib
 ./build-and-measure.sh  # Ensure no size regression
 ```
 
@@ -447,6 +447,6 @@ cd benchmark/bench-binary-size/tinystring-lib
 - ✅ **API compatibility** preserved
 - ✅ **Documentation complete** with methodology and results
 
-**Working Directory:** `c:\Users\Cesar\Packages\Internal\tinystring\`
+**Working Directory:** `c:\Users\Cesar\Packages\Internal\webtyp/fmt\`
 **Focus:** Performance recovery through smart allocation optimization
 **Philosophy:** Correctness + Performance + Maintainability (balanced approach)

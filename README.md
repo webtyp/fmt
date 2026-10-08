@@ -8,7 +8,7 @@ fmt is a lightweight Go library that provides comprehensive string manipulation,
 
 - 🚀 **Fluid and chainable API** - Easy to use and readable operations
 - 📝 **Complete string toolkit** - Transformations, conversions, formatting, and error handling
-- 🌍 **Multilingual error messages** - Opt-in dictionary system with 9 languages via `fmt/lang`
+- 🌍 **Multilingual error messages** - Opt-in: importing `webtyp.com/lang` installs the translator
 - 🧵 **Concurrency safe** - Thread-safe operations for concurrent environments
 - 📦 **Zero dependencies** - No `fmt`, `strings`, `strconv`, or `errors` imports
 - 🎯 **TinyGo optimized** - Manual implementations for minimal binary size
@@ -29,46 +29,56 @@ go get webtyp.com/fmt
 ```go
 import . "webtyp.com/fmt"
 
-// Quick start - Basic conversion and transformation
-text := Convert("Hóla Múndo").Tilde().ToLower().String() // out: "hola mundo"
-
-// Working with different data types
-numText := Convert(42).String()     // out: "42"
-boolText := Convert(true).String()  // out: "true"
+// Conversion and transformation
+text := Convert("Hola Mundo").ToLower().String() // out: "hola mundo"
+numText := Convert(42).String()                  // out: "42"
+boolText := Convert(true).String()               // out: "true"
 
 // Memory-efficient approach using string pointers
-original := "Él Múrcielago Rápido"
-Convert(&original).Tilde().CamelLow().Apply()
-// original is now: "elMurcielagoRapido"
+original := "el murcielago rapido"
+Convert(&original).CamelUp().Apply()
+// original is now: "ElMurcielagoRapido"
 
-// Efficient builder and chaining with accent normalization
-items := []string{"  ÁPPLE  ", "  banána  ", "  piñata  ","  ÑANDÚ  "}
+// Efficient builder and chaining
+items := []string{"  APPLE  ", "  banana  ", "  piñata  "}
 builder := Convert() // without params reused buffer = optimal performance
 for i, item := range items {
-    processed := Convert(item).
-        TrimSpace(). // TrimSpace whitespace
-        Tilde(). // Normalize accents
-        ToLower(). // Convert to lowercase
-        Capitalize(). // Capitalize first letter
-        String() // Finalize the string
+    processed := Convert(item).TrimSpace().ToLower().Capitalize().String()
     builder.Write(processed)
     if i < len(items)-1 {
         builder.Write(" - ")
     }
 }
+out := builder.String() // out: "Apple - Banana - Piñata"
 
-out := builder.String() // Finalize the string hiding the error
-out, err := builder.StringErr() // OR finalize with error handling
+// Formatting, quoting and errors
+msg := Sprintf("%s has %d items", "cart", 3) // out: "cart has 3 items"
+q := Sprintf("%q", "say \"hi\"")             // out: "\"say \\\"hi\\\"\""
+err := Err("invalid", "email")                // translated when webtyp.com/lang is imported
 
-// out: "Apple - Banana - Piñata - Ñandu", err: nil
-
-// Check for uppercase prefix (supports Unicode)
-isUpper := HasUpperPrefix("Ápple") // out: true
-
-// Multi-term searching (AND/OR) with internal normalization
+// Multi-term searching (AND) with internal normalization
 found := Matches("Hello World", "hello", "world") // out: true
-foundAny := MatchesAny("Hello World", "hello", "xyz") // out: true
 ```
+
+## Moved out of fmt
+
+`fmt` only replaces `fmt`, `strings`, `strconv` and `errors`, plus its own core. Other concerns
+live in their own repos (fmt v1.1.0):
+
+| Was in fmt | Now |
+|---|---|
+| `PathJoin/PathBase/PathExt/PathShort/PathRelativeTo` | `webtyp.com/filepath`: `Join/Base/Ext/Short/RelativeTo` (+ `Tilde`) |
+| `SetPathBase` | no successor: tests use `t.Chdir` |
+| `webtyp.com/fmt/lang` | `webtyp.com/lang` |
+| `MessageType`, `Msg`, `StringType` | `webtyp.com/msgtype`: `Type`, constants, `Detect` |
+| `EscapeHTML`, `EscapeAttr` | `escape.HTML` (`webtyp.com/escape`) |
+| `JSONEscape` | `escape.JSON` |
+| `Html` | `Sprintf` |
+| `Convert(x).Quote()` | `Sprintf("%q", x)` |
+
+Deleted (no users): `TagPairs`, `TagValue`, `ExtractValue`, `Thousands`, `HasUpperPrefix`,
+`CamelLow`, `SnakeUp`, `ReplaceN`, `MatchesAny`, `IsZero`, `TruncateName`, `Tilde`, `GetKind`,
+`IDorPrimaryKey`. Now private: `Quote`, `StringErr`, `GetStringZeroCopy`.
 
 ## Documentation
 
@@ -77,21 +87,19 @@ foundAny := MatchesAny("Hello World", "hello", "xyz") // out: true
 - [Fmt Package Equivalents](docs/API_FMT.md) - Replace fmt package functions
 - [Strings Package Equivalents](docs/API_STRINGS.md) - Replace strings package functions
 - [Strconv Package Equivalents](docs/API_STRCONV.md) - Replace strconv package functions
-- [Filepath Package Equivalents](docs/API_FILEPATH.md) - Replace filepath package functions
 - [Errors Package Equivalents](docs/API_ERRORS.md) - Replace errors package functions
 
 ### Utilities & Helpers
 
-- [HTML Generation & Escaping](docs/API_HTML.md) - HTML generation and escaping utilities
-- [JSON Utilities](docs/API_JSON_ESCAPE.md) - JSON escaping and zero-value detection
-- [Key-Value Parsing](docs/API_PARSING.md) - Parse key-value strings
-- [Message Types](docs/MESSAGE_TYPES.md) - Message classification system
+- [Key-Value type and zero-alloc parsing](docs/API_PARSING.md)
 - [Smart Truncation](docs/TRUNCATION.md) - Text truncation utilities
-- [ID and Primary Key Detection](docs/ID_PRIMARY_KEY.md) - Field naming conventions
-- [Struct Tag Extraction](docs/STRUCT_TAGS.md) - Extract values from struct tags
-- [Translation Guide](docs/TRANSLATE.md) - Multilingual error messages
-- [Language Package (i18n)](lang/README.md) - Subpackage for multilingual support
 
+
+## Testing
+
+Tests live in `tests/` (package `fmt_test`, public API only). A test stays at the root only
+when it needs an unexported identifier, and starts with a `// Root-level test (justified):` line.
+Run `gotest` (vet, race, WASM).
 
 ## Benchmarking
 - [Benchmarking](benchmark/README.md)

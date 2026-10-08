@@ -1,7 +1,7 @@
 # MEMORY OPTIMIZATION REPORT: GetString() Usage Analysis
 
 ## EXECUTIVE SUMMARY
-The tinystring library has extensive usage of `GetString()` across multiple files, causing unnecessary memory allocations through `[]byte` to `string` conversions. This report identifies optimization opportunities to eliminate these allocations, following the pattern established in `capitalizeASCIIOptimized()` and the optimized `Quote()` method.
+The webtyp/fmt library has extensive usage of `GetString()` across multiple files, causing unnecessary memory allocations through `[]byte` to `string` conversions. This report identifies optimization opportunities to eliminate these allocations, following the pattern established in `capitalizeASCIIOptimized()` and the optimized `Quote()` method.
 
 ## METHODOLOGY
 - Searched for all `GetString()` usages across the codebase
@@ -131,8 +131,8 @@ data := c.work[:c.workLen]
 5. Preserve all public API behavior
 
 ## CONCLUSION
-Implementing these optimizations will eliminate the majority of unnecessary string allocations in the tinystring library, following the zero-allocation FastHTTP optimization patterns already established in `memory.go`. The changes are internal optimizations that maintain full API compatibility while significantly improving performance.
+Implementing these optimizations will eliminate the majority of unnecessary string allocations in the webtyp/fmt library, following the zero-allocation FastHTTP optimization patterns already established in `memory.go`. The changes are internal optimizations that maintain full API compatibility while significantly improving performance.
 
 ---
 
-This file serves as documentation for `GetString()` optimization opportunities across the tinystring library. No executable code is contained within.
+This file serves as documentation for `GetString()` optimization opportunities across the webtyp/fmt library. No executable code is contained within.

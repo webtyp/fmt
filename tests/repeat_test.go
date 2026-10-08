@@ -1,6 +1,9 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 func TestDebugRepeat(t *testing.T) {
 	// Test: Convert("test").Repeat(0) should be ""
@@ -104,14 +107,6 @@ func TestRepeatChain(t *testing.T) {
 			},
 		},
 		{
-			name:  "Repeat with CamelCase",
-			input: "hello world",
-			want:  "helloWorldhelloWorld",
-			function: func(t *Conv) *Conv {
-				return t.CamelLow().Repeat(2)
-			},
-		},
-		{
 			name:  "Empty after repeat zero",
 			input: "Conv",
 			want:  "",
@@ -120,27 +115,11 @@ func TestRepeatChain(t *testing.T) {
 			},
 		},
 		{
-			name:  "Repeat with accents and remove tildes",
-			input: "ñandú",
-			want:  "ñanduñanduñandu",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().Repeat(3)
-			},
-		},
-		{
 			name:  "SnakeCase and Repeat",
 			input: "Hello World Example",
 			want:  "hello_world_examplehello_world_example",
 			function: func(t *Conv) *Conv {
 				return t.SnakeLow().Repeat(2)
-			},
-		},
-		{
-			name:  "Complex chaining",
-			input: "Él Múrcielago",
-			want:  "ELMURCIELAGOELMURCIELAGO",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().CamelLow().ToUpper().Repeat(2)
 			},
 		},
 	}

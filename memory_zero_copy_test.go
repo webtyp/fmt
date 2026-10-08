@@ -1,3 +1,6 @@
+// Root-level test (justified): exercises getStringZeroCopy and the Conv buffers
+// (out, work, err) — the zero-copy guarantee is a pointer identity with the internal
+// buffer, which is not observable through the exported API.
 package fmt
 
 import (
@@ -5,7 +8,7 @@ import (
 	"unsafe"
 )
 
-func TestGetStringZeroCopy(t *testing.T) {
+func TestGetStringZeroCopyIsZeroCopy(t *testing.T) {
 	tests := []struct {
 		name     string
 		dest     BuffDest
@@ -32,11 +35,11 @@ func TestGetStringZeroCopy(t *testing.T) {
 			c.WrString(tt.dest, tt.input)
 
 			// Get zero-copy string
-			result := c.GetStringZeroCopy(tt.dest)
+			result := c.getStringZeroCopy(tt.dest)
 
 			// Check correctness
 			if result != tt.expected {
-				t.Errorf("GetStringZeroCopy(%v) = %q, want %q", tt.dest, result, tt.expected)
+				t.Errorf("getStringZeroCopy(%v) = %q, want %q", tt.dest, result, tt.expected)
 			}
 
 			// Verify zero-allocation: string data should point to buffer
@@ -77,7 +80,7 @@ func BenchmarkGetStringZeroCopy(b *testing.B) {
 	b.ReportAllocs()
 
 	for i := 0; i < b.N; i++ {
-		result := c.GetStringZeroCopy(BuffOut)
+		result := c.getStringZeroCopy(BuffOut)
 		_ = result // Prevent optimization
 	}
 }

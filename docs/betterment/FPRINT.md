@@ -54,12 +54,12 @@ func Fprintf(w io.Writer, format string, args ...any) (n int, err error) {
 
 ### 2. Import Requirements
 - Add `io` import to access `io.Writer` interface
-- Consider adding `errors` import or use tinystring's error system
+- Consider adding `errors` import or use webtyp/fmt's error system
 
 ### 3. Error Handling Strategy
 Two approaches to consider:
 - **Option A**: Use Go's standard `errors.New()` for io.Writer compatibility
-- **Option B**: Convert tinystring errors to standard errors for consistency
+- **Option B**: Convert webtyp/fmt errors to standard errors for consistency
 
 ### 4. Memory Optimization
 - Leverage existing object pooling system
@@ -80,8 +80,8 @@ Two approaches to consider:
 4. Ensure memory cleanup with `defer c.putConv()`
 
 ### Phase 2: Error Integration
-1. Decide on error handling approach (standard vs tinystring errors)
-2. Implement proper error conversion if using tinystring errors
+1. Decide on error handling approach (standard vs webtyp/fmt errors)
+2. Implement proper error conversion if using webtyp/fmt errors
 3. Test error propagation scenarios
 
 ### Phase 3: Optimization
@@ -140,7 +140,7 @@ Fprintf(w, "JSON: %s", jsonData)
 - Following established patterns in the codebase
 
 ### Medium Risk
-- Error handling integration between tinystring and standard library
+- Error handling integration between webtyp/fmt and standard library
 - Import dependencies (minimal impact given `unsafe` already imported)
 
 ### Mitigation
@@ -158,4 +158,4 @@ Fprintf(w, "JSON: %s", jsonData)
 ## Future Enhancements
 - Consider `Fprintln` variant for consistency
 - Evaluate streaming capabilities for very large outputs
-- Potential integration with tinystring's multilingual error system
+- Potential integration with webtyp/fmt's multilingual error system

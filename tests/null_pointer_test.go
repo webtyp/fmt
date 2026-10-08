@@ -1,6 +1,9 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 // TestNullPointerProtection tests null pointer verification for *string
 func TestNullPointerProtection(t *testing.T) {
@@ -9,7 +12,7 @@ func TestNullPointerProtection(t *testing.T) {
 
 	// This should not panic and should set an error
 	c := Convert(nullStrPtr)
-	if !c.hasContent(BuffErr) {
+	if c.Error() == "" {
 		t.Error("Convert with null *string should set an error")
 	}
 
@@ -27,7 +30,7 @@ func TestValidPointerHandling(t *testing.T) {
 
 	// This should work normally
 	c := Convert(strPtr)
-	if c.hasContent(BuffErr) {
+	if c.Error() != "" {
 		t.Error("Convert with valid *string should not set an error")
 	}
 

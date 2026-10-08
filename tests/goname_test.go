@@ -7,20 +7,19 @@ import (
 
 func TestCamelCase(t *testing.T) {
 	tests := []struct {
-		input    string
-		camelUp  string
-		camelLow string
+		input   string
+		camelUp string
 	}{
-		{"id", "Id", "id"},
-		{"sku", "Sku", "sku"},
-		{"tenant_id", "TenantId", "tenantId"},
-		{"is_active", "IsActive", "isActive"},
-		{"updated_at", "UpdatedAt", "updatedAt"},
-		{"api_response", "ApiResponse", "apiResponse"},
-		{"user123_name", "User123Name", "user123Name"},
-		{"name", "Name", "name"},
-		{"first-name", "FirstName", "firstName"},
-		{"hello world", "HelloWorld", "helloWorld"},
+		{"id", "Id"},
+		{"sku", "Sku"},
+		{"tenant_id", "TenantId"},
+		{"is_active", "IsActive"},
+		{"updated_at", "UpdatedAt"},
+		{"api_response", "ApiResponse"},
+		{"user123_name", "User123Name"},
+		{"name", "Name"},
+		{"first-name", "FirstName"},
+		{"hello world", "HelloWorld"},
 	}
 
 	for _, tt := range tests {
@@ -28,11 +27,6 @@ func TestCamelCase(t *testing.T) {
 			up := tf.Convert(tt.input).CamelUp().String()
 			if up != tt.camelUp {
 				t.Errorf("CamelUp(%q) = %q, want %q", tt.input, up, tt.camelUp)
-			}
-
-			low := tf.Convert(tt.input).CamelLow().String()
-			if low != tt.camelLow {
-				t.Errorf("CamelLow(%q) = %q, want %q", tt.input, low, tt.camelLow)
 			}
 		})
 	}
@@ -62,21 +56,21 @@ func TestRoundTrip(t *testing.T) {
 }
 
 func TestAcronymSnake(t *testing.T) {
-    // APIResponse -> api_response
-    input := "APIResponse"
-    want := "api_response"
-    got := tf.Convert(input).SnakeLow().String()
-    if got != want {
-        t.Errorf("SnakeLow(%q) = %q, want %q", input, got, want)
-    }
+	// APIResponse -> api_response
+	input := "APIResponse"
+	want := "api_response"
+	got := tf.Convert(input).SnakeLow().String()
+	if got != want {
+		t.Errorf("SnakeLow(%q) = %q, want %q", input, got, want)
+	}
 
-    // HTTPServer -> http_server
-    input = "HTTPServer"
-    want = "http_server"
-    got = tf.Convert(input).SnakeLow().String()
-    if got != want {
-        t.Errorf("SnakeLow(%q) = %q, want %q", input, got, want)
-    }
+	// HTTPServer -> http_server
+	input = "HTTPServer"
+	want = "http_server"
+	got = tf.Convert(input).SnakeLow().String()
+	if got != want {
+		t.Errorf("SnakeLow(%q) = %q, want %q", input, got, want)
+	}
 }
 
 func TestSeparatorUnification(t *testing.T) {

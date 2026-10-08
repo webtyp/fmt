@@ -1,8 +1,9 @@
-package fmt
+package fmt_test
 
 import (
 	"errors"
 	"testing"
+	. "webtyp.com/fmt"
 )
 
 func TestSprintDevuelveElMensajeDelError(t *testing.T) {

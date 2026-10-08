@@ -1,9 +1,10 @@
-package fmt
+package fmt_test
 
 import (
 	"bytes"
 	"strings"
 	"testing"
+	. "webtyp.com/fmt"
 )
 
 func TestFprintf(t *testing.T) {

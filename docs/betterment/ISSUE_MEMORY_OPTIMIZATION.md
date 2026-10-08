@@ -149,7 +149,7 @@ go test -race ./...                 # Full test suite passes ✅
 
 **Race Detection (NEW):**
 ```bash
-cd /c/Users/Cesar/Packages/Internal/tinystring
+cd /c/Users/Cesar/Packages/Internal/webtyp
 go test -race ./...                                    # Full race detection
 go test -race -run TestConcurrent                      # Concurrency tests only
 go test -race -run TestConcurrentStringInterning       # String interning specific
@@ -157,14 +157,14 @@ go test -race -run TestConcurrentStringInterning       # String interning specif
 
 **Memory Profiling:**
 ```bash
-cd /c/Users/Cesar/Packages/Internal/tinystring/benchmark/bench-memory-alloc/tinystring
+cd /c/Users/Cesar/Packages/Internal/webtyp/benchmark/bench-memory-alloc/webtyp
 go test -bench=BenchmarkNumberProcessing -benchmem -memprofile=mem_phase12.prof
 go tool pprof -text mem_phase12.prof
 ```
 
 **Performance Verification:**
 ```bash
-cd /c/Users/Cesar/Packages/Internal/tinystring
+cd /c/Users/Cesar/Packages/Internal/webtyp
 go test -bench=BenchmarkStringOperations -benchmem    # Individual operations
 go test -bench=. -benchmem                            # All benchmarks
 ```
@@ -212,6 +212,6 @@ go test -bench=. -benchmem                            # All benchmarks
 - ✅ **Performance maintained:** Still better than stdlib in memory
 - ✅ **Documentation:** Complete analysis and methodology
 
-**Working Directory:** `c:\Users\Cesar\Packages\Internal\tinystring\`
+**Working Directory:** `c:\Users\Cesar\Packages\Internal\webtyp/fmt\`
 **Focus:** Thread safety achieved, foundation set for future performance recovery
 **Methodology:** Safety → Performance → Optimization (priority order established)

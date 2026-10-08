@@ -5,7 +5,7 @@ package fmt
 //
 // IMPORTANT: The order and values of Kind must NOT be changed.
 // These values are used in tinyreflect, a minimal version of reflectlite from the Go standard library.
-// Keeping the order and values identical ensures compatibility with code and data shared between tinystring and tinyreflect.
+// Keeping the order and values identical ensures compatibility with code and data shared between webtyp and tinyreflect.
 type Kind uint8
 
 // Kind exposes the Kind constants as fields for external use, while keeping the underlying type and values private.

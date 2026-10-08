@@ -1,25 +1,28 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 // TestConvertVariadicValidation tests Convert() parameter validation
 func TestConvertVariadicValidation(t *testing.T) {
 	// Valid usage
 	c1 := Convert()        // Empty - should work
 	c2 := Convert("hello") // Single value - should work
-	if len(c1.err) > 0 {
-		t.Errorf("Convert() should not have error, got: %s", c1.getError())
+	if c1.Error() != "" {
+		t.Errorf("Convert() should not have error, got: %s", c1.Error())
 	}
-	if len(c2.err) > 0 {
-		t.Errorf("Convert(value) should not have error, got: %s", c2.getError())
+	if c2.Error() != "" {
+		t.Errorf("Convert(value) should not have error, got: %s", c2.Error())
 	}
 
 	// Clean up
-	c1.putConv()
-	c2.putConv()
+	c1.PutConv()
+	c2.PutConv()
 	// Invalid usage - should set error and continue chain
 	c3 := Convert("hello", "world") // Multiple values - should set error
-	if len(c3.err) == 0 {
+	if c3.Error() == "" {
 		t.Error("Convert with multiple parameters should set error")
 	}
 
@@ -86,18 +89,17 @@ func TestErrorChainInterruption(t *testing.T) {
 	}
 	// Test error case
 	c2 := Convert("hello", "world") // This should set error
-	if len(c2.err) == 0 {
+	if c2.Error() == "" {
 		t.Error("Expected error for multiple parameters, got none")
 	}
 
 	c2.Write(" more") // This should be omitted due to error
 
-	result2, err := c2.StringErr()
-	if err == nil {
-		t.Error("Expected error from StringErr(), got nil")
+	if c2.Error() == "" {
+		t.Error("Expected the error to survive the chain, got none")
 	}
 	// When there's an error, out should be empty string
-	if result2 != "" {
+	if result2 := c2.String(); result2 != "" {
 		t.Errorf("Expected empty out due to error, got: %s", result2)
 	}
 }
@@ -140,7 +142,7 @@ func TestBuilderPattern(t *testing.T) {
 // TestErrFunction tests the refactored Err function
 func TestErrFunction(t *testing.T) {
 	err := Err("rawfmt", "rawval")
-	if len(err.err) == 0 {
+	if err.Error() == "" {
 		t.Error("Err function should create error message")
 	}
 }

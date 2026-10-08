@@ -187,7 +187,7 @@ func (c *Conv) WrIntBase(dest BuffDest, val int64, base int, signed bool, upper 
 // It does not take a signed parameter; instead, it checks c.Kind (K.Int = signed, K.Uint = unsigned).
 func (c *Conv) parseIntBase(base ...int) int64 {
 
-	s := c.GetStringZeroCopy(BuffOut)
+	s := c.getStringZeroCopy(BuffOut)
 	baseVal := 10
 	if len(base) > 0 {
 		baseVal = base[0]

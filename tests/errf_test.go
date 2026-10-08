@@ -1,6 +1,9 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 // Errf used to truncate any message that had literal text before a verb: the formatted
 // value and everything after it vanished, with no error reported.

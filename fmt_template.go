@@ -270,18 +270,6 @@ func (c *Conv) isValidWriteFormatChar(ch rune) bool {
 	return c.isValidFormatChar(ch)
 }
 
-// spaces returns a string with n spaces
-func spaces(n int) string {
-	if n <= 0 {
-		return ""
-	}
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = ' '
-	}
-	return string(b)
-}
-
 // padString returns a string with n characters of the specified byte
 func padString(n int, ch byte) string {
 	if n <= 0 {
@@ -385,12 +373,12 @@ func (c *Conv) formatValue(arg any, formatChar rune, param int, formatSpec strin
 		// Quoted string or rune
 		switch v := arg.(type) {
 		case string:
-			return Convert(v).Quote().String()
+			return Convert(v).quote().String()
 		case rune:
 			if v == '\'' {
 				return "'\\''"
 			}
-			s := Convert(string(v)).Quote().String()
+			s := Convert(string(v)).quote().String()
 			if len(s) >= 2 {
 				return "'" + s[1:len(s)-1] + "'"
 			}
@@ -399,11 +387,17 @@ func (c *Conv) formatValue(arg any, formatChar rune, param int, formatSpec strin
 			if v == '\'' {
 				return "'\\''"
 			}
-			s := Convert(string(rune(v))).Quote().String()
+			s := Convert(string(rune(v))).quote().String()
 			if len(s) >= 2 {
 				return "'" + s[1:len(s)-1] + "'"
 			}
 			return "'" + string(rune(v)) + "'"
+		}
+		// Any other value is quoted in its string form: Sprintf("%q", 123) == `"123"`.
+		// Unlike Go, which prints a rune literal for an integer: a number quoted as
+		// text is what a log or a message needs, and it costs no rune tables.
+		if s, err := Convert(arg).quote().stringErr(); err == nil {
+			return s
 		}
 		c.wrInvalidTypeErr(formatSpec)
 		return ""

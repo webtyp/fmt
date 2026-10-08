@@ -8,14 +8,14 @@ import (
 func BenchmarkStringProcessing(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = processTextWithTinyString(shared.TestTexts)
+		_ = processTextWithWebTyp(shared.TestTexts)
 	}
 }
 
 func BenchmarkNumberProcessing(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = processNumbersWithTinyString(shared.TestNumbers)
+		_ = processNumbersWithWebTyp(shared.TestNumbers)
 	}
 }
 
@@ -26,10 +26,10 @@ func BenchmarkMixedOperations(b *testing.B) {
 		for key, value := range shared.TestMixedData {
 			switch v := value.(type) {
 			case string:
-				processed := processTextWithTinyString([]string{v})[0]
+				processed := processTextWithWebTyp([]string{v})[0]
 				results[key] = processed
 			case float64:
-				processed := processNumbersWithTinyString([]float64{v})[0]
+				processed := processNumbersWithWebTyp([]float64{v})[0]
 				results[key] = processed
 			}
 		}

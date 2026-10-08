@@ -109,7 +109,7 @@ func measureBinarySizes() []BinaryInfo {
 	}
 
 	// Define patterns to search for
-	patterns := []string{"standard", "tinystring"}
+	patterns := []string{"standard", "webtyp"}
 
 	// Search for binaries
 	for _, pattern := range patterns {
@@ -153,20 +153,20 @@ func displayOptimizationTable(binaries []BinaryInfo) {
 
 		// Find matching binaries for this optimization level
 		standardNative := findBinaryByPattern(binaries, "standard", "native", opt.Suffix)
-		tinystringNative := findBinaryByPattern(binaries, "tinystring", "native", opt.Suffix)
+		webtypNative := findBinaryByPattern(binaries, "webtyp", "native", opt.Suffix)
 		standardWasm := findBinaryByPattern(binaries, "standard", "wasm", opt.Suffix)
-		tinystringWasm := findBinaryByPattern(binaries, "tinystring", "wasm", opt.Suffix)
+		webtypWasm := findBinaryByPattern(binaries, "webtyp", "wasm", opt.Suffix)
 
-		if standardNative.Name != "" && tinystringNative.Name != "" {
-			improvement := calculateImprovement(standardNative.Size, tinystringNative.Size)
+		if standardNative.Name != "" && webtypNative.Name != "" {
+			improvement := calculateImprovement(standardNative.Size, webtypNative.Size)
 			println(Sprintf("%-15s %-15s %-15s %-15s", "Native",
-				standardNative.SizeStr, tinystringNative.SizeStr, improvement))
+				standardNative.SizeStr, webtypNative.SizeStr, improvement))
 		}
 
-		if standardWasm.Name != "" && tinystringWasm.Name != "" {
-			improvement := calculateImprovement(standardWasm.Size, tinystringWasm.Size)
+		if standardWasm.Name != "" && webtypWasm.Name != "" {
+			improvement := calculateImprovement(standardWasm.Size, webtypWasm.Size)
 			println(Sprintf("%-15s %-15s %-15s %-15s", "WebAssembly",
-				standardWasm.SizeStr, tinystringWasm.SizeStr, improvement))
+				standardWasm.SizeStr, webtypWasm.SizeStr, improvement))
 		}
 	}
 }
@@ -247,29 +247,29 @@ func runMemoryBenchmarks() []MemoryComparison {
 
 	// Run fmt benchmarks
 	LogInfo("Running fmt memory benchmarks...")
-	tinystringResults := runBenchmarks("tinystring")
+	webtypResults := runBenchmarks("webtyp")
 
 	// Create comparisons
 	comparisons = append(comparisons, createComparison(
 		"String Processing",
 		findBenchmark(standardResults, "BenchmarkStringProcessing"),
-		findBenchmark(tinystringResults, "BenchmarkStringProcessing"),
+		findBenchmark(webtypResults, "BenchmarkStringProcessing"),
 	))
 
 	comparisons = append(comparisons, createComparison(
 		"Number Processing",
 		findBenchmark(standardResults, "BenchmarkNumberProcessing"),
-		findBenchmark(tinystringResults, "BenchmarkNumberProcessing"),
+		findBenchmark(webtypResults, "BenchmarkNumberProcessing"),
 	))
 
 	comparisons = append(comparisons, createComparison(
 		"Mixed Operations",
 		findBenchmark(standardResults, "BenchmarkMixedOperations"),
-		findBenchmark(tinystringResults, "BenchmarkMixedOperations"),
+		findBenchmark(webtypResults, "BenchmarkMixedOperations"),
 	))
 
 	// Check for pointer optimization benchmark (fmt only)
-	pointerBench := findBenchmark(tinystringResults, "BenchmarkStringProcessingWithPointers")
+	pointerBench := findBenchmark(webtypResults, "BenchmarkStringProcessingWithPointers")
 	if pointerBench.Name != "" {
 		standardEquivalent := findBenchmark(standardResults, "BenchmarkStringProcessing")
 		comparisons = append(comparisons, createComparison(
@@ -336,10 +336,10 @@ func parseBenchmarkOutput(output, library string) []BenchmarkResult {
 }
 
 // createComparison creates a memory comparison between two benchmark results
-func createComparison(category string, standard, tinystring BenchmarkResult) MemoryComparison {
+func createComparison(category string, standard, webtyp BenchmarkResult) MemoryComparison {
 	return MemoryComparison{
 		Standard: standard,
-		fmt:      tinystring,
+		fmt:      webtyp,
 		Category: category,
 	}
 }
@@ -373,7 +373,7 @@ func displayMemoryResults(comparisons []MemoryComparison) {
 
 		if comparison.fmt.Name != "" {
 			println(Sprintf("%-35s %-12s %-15s %-15d %-15s",
-				"", "tinystring",
+				"", "webtyp",
 				FormatSize(comparison.fmt.BytesPerOp),
 				comparison.fmt.AllocsPerOp,
 				formatNanoTime(comparison.fmt.NsPerOp)))

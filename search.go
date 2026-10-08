@@ -128,13 +128,6 @@ func Matches(content string, terms ...string) bool {
 	return matches(false, content, terms...)
 }
 
-// MatchesAny reports whether content contains AT LEAST ONE of the given terms (OR semantics).
-// content and each term are lowercased before comparison.
-// Returns false if no terms are given or any term is empty.
-func MatchesAny(content string, terms ...string) bool {
-	return matches(true, content, terms...)
-}
-
 func matches(or bool, content string, terms ...string) bool {
 	if len(terms) == 0 {
 		return false

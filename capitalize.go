@@ -105,48 +105,6 @@ func (t *Conv) ToUpper() *Conv {
 	return t.changeCaseOptimized(false)
 }
 
-// hasUpperPrefix reports whether the first character is an uppercase letter.
-// Supports ASCII (A-Z) and common accented uppercase (Á, É, Í, etc.).
-func (t *Conv) hasUpperPrefix() bool {
-	if t.outLen == 0 {
-		return false
-	}
-	ch := t.out[0]
-	// ASCII fast path (A-Z) - reuses pattern from capitalizeASCIIOptimized
-	if ch >= 'A' && ch <= 'Z' {
-		return true
-	}
-	// Unicode: check accented uppercase from aU (mapping.go)
-	if ch > 127 {
-		runes := []rune(t.GetString(BuffOut))
-		if len(runes) == 0 {
-			return false
-		}
-		r := runes[0]
-		for _, char := range aU {
-			if r == char {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-// HasUpperPrefix reports whether the string s starts with an uppercase letter.
-// Supports ASCII (A-Z) and common accented uppercase (Á, É, Í, Ó, Ú, etc.).
-//
-// Examples:
-//
-//	HasUpperPrefix("Hello") -> true
-//	HasUpperPrefix("Ángel") -> true
-//	HasUpperPrefix("hello") -> false
-func HasUpperPrefix(s string) bool {
-	if len(s) == 0 {
-		return false
-	}
-	return Convert(s).hasUpperPrefix()
-}
-
 // changeCaseOptimized implements fast ASCII path with fallback to full Unicode
 func (t *Conv) changeCaseOptimized(toLower bool) *Conv {
 	if t.hasContent(BuffErr) {
@@ -229,11 +187,6 @@ func (t *Conv) changeCase(toLower bool, dest BuffDest) *Conv {
 	return t
 }
 
-// converts Conv to camelCase (first word lowercase) eg: "Hello world" -> "helloWorld"
-func (t *Conv) CamelLow() *Conv {
-	return t.toCaseTransformMinimal(true, "")
-}
-
 // converts Conv to PascalCase (all words capitalized) eg: "hello world" -> "HelloWorld"
 func (t *Conv) CamelUp() *Conv {
 	return t.toCaseTransformMinimal(false, "")
@@ -256,16 +209,6 @@ func (t *Conv) SnakeLow(sep ...string) *Conv {
 		separator = sep[0]
 	}
 	return t.toCaseTransformMinimal(true, separator)
-}
-
-// SnakeUp converts Conv to Snake_Case format
-func (t *Conv) SnakeUp(sep ...string) *Conv {
-	// Phase 4.3: Use local variable instead of struct field
-	separator := "_" // underscore default
-	if len(sep) > 0 {
-		separator = sep[0]
-	}
-	return t.toCaseTransformMinimal(false, separator)
 }
 
 // Minimal implementation without pools or builders - optimized for minimal allocations

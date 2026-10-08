@@ -11,7 +11,7 @@ Achieve >90% WebAssembly binary size reduction vs Go standard library.
 
 ## Environment
 - **OS**: Windows, **Shell**: Git Bash
-- **Working Directory**: `c:\Users\Cesar\Packages\Internal\tinystring`
+- **Working Directory**: `c:\Users\Cesar\Packages\Internal\webtyp/fmt`
 - **Git Branch**: `size-reduction`
 
 ## Constraints
@@ -22,7 +22,7 @@ Achieve >90% WebAssembly binary size reduction vs Go standard library.
 
 ## Validation Commands
 ```bash
-cd /c/Users/Cesar/Packages/Internal/tinystring
+cd /c/Users/Cesar/Packages/Internal/webtyp
 go test ./...
 cd benchmark && ./memory-benchmark.sh && ./build-and-measure.sh
 ```

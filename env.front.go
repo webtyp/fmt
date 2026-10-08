@@ -31,9 +31,3 @@ func Println(args ...any) {
 func Printf(format string, args ...any) {
 	js.Global().Get("console").Call("log", Sprintf(format, args...))
 }
-
-// isWasm reports whether the current binary is compiled for WASM.
-// Used for conditional testing.
-func isWasm() bool {
-	return true
-}

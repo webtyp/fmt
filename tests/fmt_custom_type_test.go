@@ -1,6 +1,10 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"runtime"
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 // customType simula un tipo personalizado como pdfVersion en fpdf
 type customType string
@@ -103,7 +107,7 @@ func TestFmtCustomTypeWithOtherFormats(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Skip reflection-dependent tests in WASM
-			if isWasm() && tt.name == "custom int with %d" {
+			if runtime.GOARCH == "wasm" && tt.name == "custom int with %d" {
 				t.Skip("Skipping reflection-dependent test in WASM")
 			}
 

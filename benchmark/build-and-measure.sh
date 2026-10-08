@@ -34,7 +34,7 @@ echo "🧹 Cleaning previous files..."
 find "$BINARY_SIZE_DIR" -name "*.exe" -delete 2>/dev/null || true
 find "$BINARY_SIZE_DIR" -name "*.wasm" -delete 2>/dev/null || true
 find "$BINARY_SIZE_DIR" -name "standard*" ! -name "*.go" ! -name "*.mod" -delete 2>/dev/null || true
-find "$BINARY_SIZE_DIR" -name "tinystring*" ! -name "*.go" ! -name "*.mod" -delete 2>/dev/null || true
+find "$BINARY_SIZE_DIR" -name "webtyp*" ! -name "*.go" ! -name "*.mod" -delete 2>/dev/null || true
 
 # Define optimization configurations
 SUFFIXES=("" "-ultra" "-speed" "-debug")
@@ -95,11 +95,11 @@ fi
 
 # Build fmt example
 echo "📦 Building fmt example with multiple optimizations..."
-cd "$BINARY_SIZE_DIR/tinystring-lib"
+cd "$BINARY_SIZE_DIR/webtyp-lib"
 go mod tidy
 
 # Standard Go build (only default)
-go build -ldflags="-s -w" -o tinystring main.go
+go build -ldflags="-s -w" -o webtyp main.go
 
 # TinyGo builds with different optimizations
 if [ "$TINYGO_AVAILABLE" = true ]; then
@@ -126,9 +126,9 @@ if [ "$TINYGO_AVAILABLE" = true ]; then
         echo "  Building with optimization: $suffix (${OPT_DESCRIPTIONS[$key]})"
         
         if [ -z "$flags" ]; then
-            tinygo build -o "tinystring${suffix}.wasm" -target wasm main.go
+            tinygo build -o "webtyp${suffix}.wasm" -target wasm main.go
         else
-            tinygo build $flags -o "tinystring${suffix}.wasm" -target wasm main.go
+            tinygo build $flags -o "webtyp${suffix}.wasm" -target wasm main.go
         fi
     done
     echo "✅ fmt: Go binary and WebAssembly variants created"
@@ -149,7 +149,7 @@ echo ""
 echo "🎉 Benchmark completed successfully!"
 echo ""
 echo "📁 Generated files:"
-find "$BINARY_SIZE_DIR" -name "*.exe" -o -name "*.wasm" -o -name "standard" -o -name "tinystring" | while read file; do
+find "$BINARY_SIZE_DIR" -name "*.exe" -o -name "*.wasm" -o -name "standard" -o -name "webtyp" | while read file; do
     if [[ -f "$file" ]]; then
         if command -v numfmt &> /dev/null; then
             size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null || echo "0")

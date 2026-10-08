@@ -17,7 +17,7 @@ clean_binary_artifacts() {
     
     if [[ -d "bench-binary-size" ]]; then
         # Clean binary files in subdirectories
-        find bench-binary-size -type f \( -name "standard*" -o -name "tinystring*" \) ! -name "*.go" ! -name "*.mod" -exec rm -f {} \;
+        find bench-binary-size -type f \( -name "standard*" -o -name "webtyp*" \) ! -name "*.go" ! -name "*.mod" -exec rm -f {} \;
         
         # Clean WASM files specifically
         find bench-binary-size -name "*.wasm" -exec rm -f {} \;

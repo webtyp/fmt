@@ -4,13 +4,12 @@ import (
 	. "webtyp.com/fmt"
 )
 
-// processTextWithTinyString simulates text processing using fmt (equivalent to standard lib)
-func processTextWithTinyString(texts []string) []string {
+// processTextWithWebTyp simulates text processing using fmt (equivalent to standard lib)
+func processTextWithWebTyp(texts []string) []string {
 	results := make([]string, len(texts))
 	for i, text := range texts {
 		out := Convert(text).
 			ToLower().
-			Tilde().
 			Capitalize().
 			String()
 		results[i] = out
@@ -18,14 +17,13 @@ func processTextWithTinyString(texts []string) []string {
 	return results
 }
 
-// processNumbersWithTinyString simulates number processing (equivalent to standard lib)
-func processNumbersWithTinyString(numbers []float64) []string {
+// processNumbersWithWebTyp simulates number processing (equivalent to standard lib)
+func processNumbersWithWebTyp(numbers []float64) []string {
 	results := make([]string, len(numbers))
 	for i, num := range numbers {
 		// EQUIVALENT OPERATIONS: Same formatting as standard library
 		formatted := Convert(num).
 			Round(2).
-			Thousands().
 			String()
 		results[i] = formatted
 	}

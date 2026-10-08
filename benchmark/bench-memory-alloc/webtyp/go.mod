@@ -1,4 +1,4 @@
-module memory-bench-tinystring
+module memory-bench-webtyp
 
 go 1.25.2
 

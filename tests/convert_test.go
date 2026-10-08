@@ -1,7 +1,8 @@
-package fmt
+package fmt_test
 
 import (
 	"testing"
+	. "webtyp.com/fmt"
 )
 
 func TestConversions(t *testing.T) {
@@ -12,121 +13,11 @@ func TestConversions(t *testing.T) {
 		function func(*Conv) *Conv
 	}{
 		{
-			name:     "Tilde does not remove Ñ/ñ",
-			input:    "Ñandú ñandú",
-			want:     "Ñandu ñandu",
-			function: (*Conv).Tilde,
-		},
-		{
-			name:     "Remove tildes",
-			input:    "áéíóúÁÉÍÓÚ",
-			want:     "aeiouAEIOU",
-			function: (*Conv).Tilde,
-		},
-		{
-			name:     "Remove tildes with mixed Conv",
-			input:    "Hôlà Mündó",
-			want:     "Hola Mundo",
-			function: (*Conv).Tilde,
-		},
-		{
-			name:  "CamelLow",
-			input: "hello world example",
-			want:  "helloWorldExample",
-			function: func(t *Conv) *Conv {
-				return t.CamelLow()
-			},
-		},
-		{
-			name:  "Convert to lower with tildes",
-			input: "HÓLA MÚNDO",
-			want:  "hola mundo",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().ToLower()
-			},
-		},
-		{
-			name:  "Convert to upper with tildes",
-			input: "hóla múndo",
-			want:  "HOLA MUNDO",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().ToUpper()
-			},
-		},
-		{
-			name:     "Special characters",
-			input:    "ñÑàèìòùÀÈÌÒÙ",
-			want:     "ñÑaeiouAEIOU",
-			function: (*Conv).Tilde,
-		},
-		{
-			name:     "Tilde does not remove Ñ/ñ",
-			input:    "Ñandú ñandú",
-			want:     "Ñandu ñandu",
-			function: (*Conv).Tilde,
-		},
-		{
-			name:  "Complete transformation",
-			input: "Él Múrcielago Rápido",
-			want:  "elMurcielagoRapido",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().CamelLow()
-			},
-		},
-		{
-			name:  "Empty string",
-			input: "",
-			want:  "",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().ToLower().ToUpper().CamelLow()
-			},
-		},
-		{
 			name:  "Single character",
 			input: "A",
 			want:  "a",
 			function: func(t *Conv) *Conv {
 				return t.ToLower()
-			},
-		},
-		{
-			name:  "Multiple spaces in camelCase",
-			input: "hello    world    example",
-			want:  "helloWorldExample",
-			function: func(t *Conv) *Conv {
-				return t.CamelLow()
-			},
-		},
-		{
-			name:  "Non-mappable characters",
-			input: "Hello! @#$%^ World 123",
-			want:  "hello!@#$%^World123",
-			function: func(t *Conv) *Conv {
-				return t.CamelLow()
-			},
-		},
-		{
-			name:  "Mixed transformations",
-			input: "HÉLLÔ WórLD",
-			want:  "HELLO WORLD",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().ToUpper()
-			},
-		},
-		{
-			name:  "CamelCase with accents",
-			input: "él múrcielago RÁPIDO vuela",
-			want:  "elMurcielagoRapidoVuela",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().CamelLow()
-			},
-		},
-		{
-			name:  "CamelLow",
-			input: "hello world example",
-			want:  "helloWorldExample",
-			function: func(t *Conv) *Conv {
-				return t.CamelLow()
 			},
 		},
 		{
@@ -146,14 +37,6 @@ func TestConversions(t *testing.T) {
 			},
 		},
 		{
-			name:  "Mixed case with numbers to CamelLow",
-			input: "User123Name",
-			want:  "user123name",
-			function: func(t *Conv) *Conv {
-				return t.CamelLow()
-			},
-		},
-		{
 			name:  "Mixed case with numbers to CamelUp",
 			input: "User123Name",
 			want:  "User123Name",
@@ -167,38 +50,6 @@ func TestConversions(t *testing.T) {
 			want:  "user123_name",
 			function: func(t *Conv) *Conv {
 				return t.SnakeLow()
-			},
-		},
-		{
-			name:  "Accented Conv to camelCase",
-			input: "Él Múrcielago Rápido",
-			want:  "elMurcielagoRapido",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().CamelLow()
-			},
-		},
-		{
-			name:  "Accented Conv to PascalCase",
-			input: "Él Múrcielago Rápido",
-			want:  "ElMurcielagoRapido",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().CamelUp()
-			},
-		},
-		{
-			name:  "Accented Conv to snake_case",
-			input: "Él Múrcielago Rápido",
-			want:  "el_murcielago_rapido",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().SnakeLow()
-			},
-		},
-		{
-			name:  "Accented Conv to snake-case",
-			input: "Él Múrcielago Rápido",
-			want:  "el-murcielago-rapido",
-			function: func(t *Conv) *Conv {
-				return t.Tilde().SnakeLow("-")
 			},
 		},
 	}

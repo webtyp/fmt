@@ -1,6 +1,9 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 // TestPrintlnCases contains test cases for Println/Printf
 var TestPrintlnCases = []struct {

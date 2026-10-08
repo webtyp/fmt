@@ -43,7 +43,7 @@ update_binary_results() {
     fi
     
     # Check if binaries exist
-    binary_count=$(find bench-binary-size -type f \( -name "standard*" -o -name "tinystring*" \) ! -name "*.go" ! -name "*.mod" | wc -l)
+    binary_count=$(find bench-binary-size -type f \( -name "standard*" -o -name "webtyp*" \) ! -name "*.go" ! -name "*.mod" | wc -l)
     if [[ $binary_count -eq 0 ]]; then
         echo "⚠️  No binary files found in bench-binary-size"
         echo "ℹ️  Run build-and-measure.sh first to generate binary samples"
@@ -137,7 +137,7 @@ show_status() {
     
     # Check binary benchmarks
     if [[ -d "bench-binary-size" ]]; then
-        binary_count=$(find bench-binary-size -type f \( -name "standard*" -o -name "tinystring*" \) ! -name "*.go" ! -name "*.mod" | wc -l)
+        binary_count=$(find bench-binary-size -type f \( -name "standard*" -o -name "webtyp*" \) ! -name "*.go" ! -name "*.mod" | wc -l)
         echo "📦 Binary samples: $binary_count files found"
     else
         echo "📦 Binary samples: ❌ Directory not found"

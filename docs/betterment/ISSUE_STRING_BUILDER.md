@@ -370,7 +370,7 @@ func (c *Conv) Reset() *Conv {
 #### New File: `translation.go`
 **Purpose**: Dedicated translation functionality
 ```go
-package tinystring
+package webtyp/fmt
 
 // Translate creates a translated string with support for multilingual translations
 // Same functionality as Err but returns string directly instead of *Conv

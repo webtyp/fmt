@@ -5,7 +5,7 @@ package fmt
 var translateWord func(word string) (string, bool)
 
 // SetTranslator installs the global translator.
-// It is typically called by the fmt/lang package during its initialization.
+// It is typically called by the webtyp.com/lang package during its initialization.
 func SetTranslator(fn func(word string) (string, bool)) {
 	translateWord = fn
 }

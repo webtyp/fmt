@@ -10,7 +10,7 @@ Replace common `strings` package functions with fmt equivalents:
 | `strings.LastIndex()` | `LastIndex(s, substr)` |
 | `strings.Join()` | `Convert(slice).Join(sep).String()` or `JoinSlice(elems, sep)` |
 | `strings.Repeat()` | `Convert(s).Repeat(n).String()` or `Repeat(s, n)` |
-| `strings.Replace()` | `Convert(s).Replace(old, new).String()` or `ReplaceN(s, old, new, n)` |
+| `strings.Replace()` | `Convert(s).Replace(old, new, n).String()` |
 | `strings.ReplaceAll()` | `ReplaceAll(s, old, new)` |
 | `strings.Split()` | `Split(s, separator...)` |
 | `strings.ToLower()` | `Convert(s).ToLower().String()` or `ToLower(s)` |
@@ -19,10 +19,8 @@ Replace common `strings` package functions with fmt equivalents:
 | `strings.TrimPrefix()` | `Convert(s).TrimPrefix(prefix).String()` or `TrimPrefix(s, prefix)` |
 | `strings.TrimSuffix()` | `Convert(s).TrimSuffix(suffix).String()` or `TrimSuffix(s, suffix)` |
 | `strings.HasPrefix()` | `HasPrefix(s, prefix)` |
-| (Utility) | `HasUpperPrefix(s)` |
 | `strings.HasSuffix()` | `HasSuffix(s, suffix)` |
 | (Utility) | `Matches(s, terms...)` |
-| (Utility) | `MatchesAny(s, terms...)` |
 
 ## Drop-in stdlib-signature wrappers (strings.go)
 
@@ -45,21 +43,16 @@ without knowing the full chain API:
 | `strings.ToUpper(s)` | `ToUpper(s)` |
 | `strings.Repeat(s, count)` | `Repeat(s, count)` |
 | `strings.ReplaceAll(s, old, new)` | `ReplaceAll(s, old, new)` |
-| `strings.Replace(s, old, new, n)` | `ReplaceN(s, old, new, n)` |
 | `strings.Join(elems, sep)` | `JoinSlice(elems, sep)` |
 
-`ReplaceN` and `JoinSlice` are named differently from `Replace`/`Join`
-because those names are already taken by `Conv.Replace`/`Conv.Join` (chain
-methods with a different signature: `Conv.Replace` accepts `any` values, and
-`Conv.Join` takes the slice as the receiver instead of a parameter).
+`JoinSlice` is named differently from `Join` because that name is already
+taken by `Conv.Join` (a chain method that takes the slice as the receiver).
 
 ## Other String Transformations
 
 ```go
-Convert("hello world").CamelLow().String() // out: "helloWorld"
 Convert("hello world").CamelUp().String()  // out: "HelloWorld"
 Convert("hello world").SnakeLow().String() // out: "hello_world"
-Convert("hello world").SnakeUp().String()  // out: "HELLO_WORLD"
 ```
 
 ## String Search & Operations
@@ -72,7 +65,6 @@ count := Count("abracadabra", "abra")       // out: 2
 
 // Prefix / Suffix checks
 isPref := HasPrefix("hello", "he")          // out: true
-isUpper := HasUpperPrefix("Hello")          // out: true
 isSuf := HasSuffix("file.txt", ".txt")      // out: true
 
 // Note: this library follows the standard library semantics for prefixes/suffixes:
@@ -85,20 +77,16 @@ if pos >= 0 {
     extension := "image.backup.jpg"[pos+1:]           // out: "jpg"
 }
 
-// Multi-term searching (AND/OR semantics)
-// Both perform internal ToLower() normalization on content and terms.
-foundAll := Matches("Hello World", "hello", "world")   // out: true (AND)
-foundOne := MatchesAny("Hello World", "hello", "xyz")  // out: true (OR)
-noMatch  := Matches("Hello World", "hello", "xyz")     // out: false (AND)
+// Multi-term searching (AND semantics, with internal ToLower() normalization)
+foundAll := Matches("Hello World", "hello", "world")   // out: true
+noMatch  := Matches("Hello World", "hello", "xyz")     // out: false
 
-// ⚠️ Note: Index, Contains, LastIndex, HasUpperPrefix, Matches and MatchesAny are global functions, not methods.
+// ⚠️ Note: Index, Contains, LastIndex and Matches are global functions, not methods.
 // Do NOT use: Convert(s).Contains(substr) // ❌ Incorrect, will not compile
 // Use:        Index(s, substr)            // ✅ Correct
 //             Contains(s, substr)         // ✅ Correct
 //             LastIndex(s, substr)        // ✅ Correct
-//             HasUpperPrefix(s)           // ✅ Correct
 //             Matches(s, terms...)        // ✅ Correct
-//             MatchesAny(s, terms...)     // ✅ Correct
 
 // Replace operations
 Convert("hello world").Replace("world", "Go").String() // out: "hello Go"

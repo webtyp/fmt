@@ -280,25 +280,3 @@ func TestMatches(t *testing.T) {
 		})
 	}
 }
-
-func TestMatchesAny(t *testing.T) {
-	cases := map[string]struct {
-		content  string
-		terms    []string
-		expected bool
-	}{
-		"OR uno presente": {"Hello World", []string{"hello", "xyz"}, true},
-		"OR ninguno":      {"Hello World", []string{"foo", "bar"}, false},
-		"sin términos":    {"Hello World", []string{}, false},
-		"término vacío":   {"Hello World", []string{""}, false},
-		"content vacío":   {"", []string{"hello"}, false},
-	}
-	for name, tc := range cases {
-		t.Run(name, func(t *testing.T) {
-			got := MatchesAny(tc.content, tc.terms...)
-			if got != tc.expected {
-				t.Errorf("MatchesAny(%q, %v) = %v; want %v", tc.content, tc.terms, got, tc.expected)
-			}
-		})
-	}
-}

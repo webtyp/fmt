@@ -161,12 +161,6 @@ func (c *Conv) AnyToBuff(dest BuffDest, value any) {
 	}
 }
 
-// GetKind returns the Kind of the value stored in the Conv
-// This allows external packages to reuse tinystring's type detection logic
-func (c *Conv) GetKind() Kind {
-	return c.kind
-}
-
 // Apply updates the original string pointer with the current content and auto-releases to pool.
 // This method should be used when you want to modify the original string directly
 // without additional allocations.
@@ -199,48 +193,4 @@ func (c *Conv) String() string {
 // Bytes returns the content of the Conv as a byte slice
 func (c *Conv) Bytes() []byte {
 	return c.GetBytes(BuffOut)
-}
-
-// IsZero reports whether v is the zero value for its type.
-// Supports: string, bool, int (all sizes), uint (all sizes),
-// float32, float64, []byte, nil.
-// Returns false for unrecognized types.
-func IsZero(v any) bool {
-	switch val := v.(type) {
-	case nil:
-		return true
-	case string:
-		return val == ""
-	case bool:
-		return !val
-	case int:
-		return val == 0
-	case int8:
-		return val == 0
-	case int16:
-		return val == 0
-	case int32:
-		return val == 0
-	case int64:
-		return val == 0
-	case uint:
-		return val == 0
-	case uint8:
-		return val == 0
-	case uint16:
-		return val == 0
-	case uint32:
-		return val == 0
-	case uint64:
-		return val == 0
-	case float32:
-		return val == 0
-	case float64:
-		return val == 0
-	case []byte:
-		return len(val) == 0
-	case []int:
-		return len(val) == 0
-	}
-	return false
 }

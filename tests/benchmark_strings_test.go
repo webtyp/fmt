@@ -1,7 +1,8 @@
-package fmt
+package fmt_test
 
 import (
 	"testing"
+	. "webtyp.com/fmt"
 )
 
 // Phase 11: String Operations Benchmarks
@@ -41,24 +42,6 @@ func BenchmarkStringOperations(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			for _, str := range testData {
 				out := Convert(str).Capitalize().String()
-				_ = out
-			}
-		}
-	})
-
-	b.Run("Tilde", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			for _, str := range testData {
-				out := Convert(str).Tilde().String()
-				_ = out
-			}
-		}
-	})
-
-	b.Run("CamelLow", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			for _, str := range testData {
-				out := Convert(str).CamelLow().String()
 				_ = out
 			}
 		}
@@ -104,7 +87,7 @@ func BenchmarkStringChains(b *testing.B) {
 	b.Run("ComplexChain1", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			for _, str := range testStrings {
-				out := Convert(str).Tilde().ToLower().Capitalize().String()
+				out := Convert(str).ToLower().Capitalize().String()
 				_ = out
 			}
 		}
@@ -122,7 +105,7 @@ func BenchmarkStringChains(b *testing.B) {
 	b.Run("CamelCaseChain", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			for _, str := range testStrings {
-				out := Convert(str).Tilde().CamelLow().String()
+				out := Convert(str).CamelUp().String()
 				_ = out
 			}
 		}

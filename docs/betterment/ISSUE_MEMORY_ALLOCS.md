@@ -145,7 +145,7 @@ type Conv struct {
 
 ## 🛠️ **TOOLS & COMMANDS**
 ```bash
-cd /c/Users/Cesar/Packages/Internal/tinystring
+cd /c/Users/Cesar/Packages/Internal/webtyp
 
 go build -gcflags="-m" ./... # Detect variables escaping to the heap
 go test -bench=. -benchmem -memprofile=mem.prof # Profile memory from benchmarks

@@ -1,6 +1,9 @@
-package fmt
+package fmt_test
 
-import "testing"
+import (
+	"testing"
+	. "webtyp.com/fmt"
+)
 
 func TestToUint(t *testing.T) {
 	tests := []struct {
@@ -328,20 +331,6 @@ func TestNumericChaining(t *testing.T) {
 	c.Round(2)
 	out := c.String()
 	expected := "123.46"
-	if out != expected {
-		t.Errorf("Expected %q, got %q", expected, out)
-	}
-
-	// Test with formatting numbers (EU default)
-	out = Convert(1234567).Thousands().String()
-	expected = "1.234.567"
-	if out != expected {
-		t.Errorf("Expected %q, got %q", expected, out)
-	}
-
-	// Test with formatting numbers (Anglo)
-	out = Convert(1234567).Thousands(true).String()
-	expected = "1,234,567"
 	if out != expected {
 		t.Errorf("Expected %q, got %q", expected, out)
 	}

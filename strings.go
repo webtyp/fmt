@@ -42,13 +42,6 @@ func ReplaceAll(s, old, new string) string {
 	return Convert(s).Replace(old, new).String()
 }
 
-// ReplaceN mirrors strings.Replace(s, old, new, n).
-// Named ReplaceN (not Replace) to avoid colliding with Conv.Replace's
-// signature, which accepts values of any type instead of only strings.
-func ReplaceN(s, old, new string, n int) string {
-	return Convert(s).Replace(old, new, n).String()
-}
-
 // JoinSlice mirrors strings.Join(elems, sep).
 // Named JoinSlice (not Join) to avoid colliding with Conv.Join.
 func JoinSlice(elems []string, sep string) string {

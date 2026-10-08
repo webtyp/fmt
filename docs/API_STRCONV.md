@@ -9,7 +9,7 @@ Replace `strconv` package functions for type conversions:
 | `strconv.ParseFloat()` | `Convert(s).Float64()` |
 | `strconv.ParseBool()` | `Convert(s).Bool()` |
 | `strconv.FormatFloat()` | `Convert(f).Round(n).String()` |
-| `strconv.Quote()` | `Convert(s).Quote().String()` |
+| `strconv.Quote()` | `Sprintf("%q", s)` |
 
 ## Type Conversions
 
@@ -30,8 +30,10 @@ result, err := Convert(42).Bool()      // out: true, nil (non-zero = true)
 result, err := Convert(0).Bool()       // out: false, nil
 
 // String quoting
-Convert("hello").Quote().String()           // out: "\"hello\""
-Convert("say \"hello\"").Quote().String()  // out: "\"say \\\"hello\\\"\""
+Sprintf("%q", "hello")           // out: "\"hello\""
+Sprintf("%q", "say \"hello\"")  // out: "\"say \\\"hello\\\"\""
+Sprintf("%q", "a\x01b")          // out: "\"a\\x01b\"" (control bytes as \xHH)
+Sprintf("%q", 123)              // out: "\"123\"" (unlike Go: the string form, quoted)
 ```
 
 ## Number Formatting

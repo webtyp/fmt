@@ -6,25 +6,25 @@ Automated benchmark tools to measure and compare performance between standard Go
 
 ## Binary Size Comparison
 
-[Standard Library Example](bench-binary-size/standard-lib/main.go) | [fmt Example](bench-binary-size/tinystring-lib/main.go)
+[Standard Library Example](bench-binary-size/standard-lib/main.go) | [fmt Example](bench-binary-size/webtyp-lib/main.go)
 
 <!-- This table is automatically generated from build-and-measure.sh -->
-*Last updated: 2026-06-18 13:13:20*
+*Last updated: 2026-10-07 21:15:18*
 
 | Build Type | Parameters | Standard Library<br/>`go build` | fmt<br/>`tinygo build` | Size Reduction | Performance |
 |------------|------------|------------------|------------|----------------|-------------|
-| 🖥️ **Default Native** | `-ldflags="-s -w"` | 1.4 MB | 1.3 MB | **-156.0 KB** | ➖ **10.5%** |
-| 🌐 **Default WASM** | `(default -opt=z)` | 697.2 KB | 284.5 KB | **-412.7 KB** | ✅ **59.2%** |
-| 🌐 **Ultra WASM** | `-no-debug -panic=trap -scheduler=none -gc=leaking -target wasm` | 156.0 KB | 24.7 KB | **-131.4 KB** | 🏆 **84.2%** |
-| 🌐 **Speed WASM** | `-opt=2 -target wasm` | 948.5 KB | 408.5 KB | **-540.0 KB** | ✅ **56.9%** |
-| 🌐 **Debug WASM** | `-opt=0 -target wasm` | 1.9 MB | 818.7 KB | **-1.1 MB** | ✅ **58.6%** |
+| 🖥️ **Default Native** | `-ldflags="-s -w"` | 1.5 MB | 1.4 MB | **-124.0 KB** | ➖ **7.8%** |
+| 🌐 **Default WASM** | `(default -opt=z)` | 705.4 KB | 272.0 KB | **-433.3 KB** | ✅ **61.4%** |
+| 🌐 **Ultra WASM** | `-no-debug -panic=trap -scheduler=none -gc=leaking -target wasm` | 156.2 KB | 26.1 KB | **-130.2 KB** | 🏆 **83.3%** |
+| 🌐 **Speed WASM** | `-opt=2 -target wasm` | 959.2 KB | 410.5 KB | **-548.7 KB** | ✅ **57.2%** |
+| 🌐 **Debug WASM** | `-opt=0 -target wasm` | 2.0 MB | 795.9 KB | **-1.2 MB** | ✅ **60.3%** |
 
 ### 🎯 Performance Summary
 
-- 🏆 **Peak Reduction: 84.2%** (Best optimization)
-- ✅ **Average WebAssembly Reduction: 64.7%**
-- ✅ **Average Native Reduction: 10.5%**
-- 📦 **Total Size Savings: 2.3 MB across all builds**
+- 🏆 **Peak Reduction: 83.3%** (Best optimization)
+- ✅ **Average WebAssembly Reduction: 65.6%**
+- ✅ **Average Native Reduction: 7.8%**
+- 📦 **Total Size Savings: 2.4 MB across all builds**
 
 #### Performance Legend
 - ❌ Poor (<5% reduction)
@@ -35,26 +35,26 @@ Automated benchmark tools to measure and compare performance between standard Go
 
 ## Memory Usage Comparison
 
-[Standard Library Example](bench-memory-alloc/standard) | [fmt Example](bench-memory-alloc/tinystring)
+[Standard Library Example](bench-memory-alloc/standard) | [fmt Example](bench-memory-alloc/webtyp)
 
 <!-- This table is automatically generated from memory-benchmark.sh -->
-*Last updated: 2026-06-18 13:13:35*
+*Last updated: 2026-10-07 21:15:34*
 
 Performance benchmarks comparing memory allocation patterns between standard Go library and fmt:
 
 | 🧪 **Benchmark Category** | 📚 **Library** | 💾 **Memory/Op** | 🔢 **Allocs/Op** | ⏱️ **Time/Op** | 📈 **Memory Trend** | 🎯 **Alloc Trend** | 🏆 **Performance** |
 |----------------------------|----------------|-------------------|-------------------|-----------------|---------------------|---------------------|--------------------|
-| 📝 **String Processing** | 📊 Standard | `808 B / 596.048 OP` | `32` | `2.2μs` | - | - | - |
-| | 🚀 fmt | `464 B / 218.416 OP` | `17` | `5.4μs` | 🏆 **42.6% less** | 🏆 **46.9% less** | 🏆 **Excellent** |
-| 🔢 **Number Processing** | 📊 Standard | `720 B / 566.374 OP` | `34` | `2.3μs` | - | - | - |
-| | 🚀 fmt | `320 B / 567.528 OP` | `17` | `2.0μs` | 🏆 **55.6% less** | 🏆 **50.0% less** | 🏆 **Excellent** |
-| 🔄 **Mixed Operations** | 📊 Standard | `368 B / 713.047 OP` | `20` | `1.4μs` | - | - | - |
-| | 🚀 fmt | `192 B / 444.537 OP` | `12` | `2.6μs` | 🏆 **47.8% less** | 🏆 **40.0% less** | 🏆 **Excellent** |
+| 📝 **String Processing** | 📊 Standard | `640 B / 320149 OP` | `25` | `3.4μs` | - | - | - |
+| | 🚀 fmt | `464 B / 84074 OP` | `17` | `13.5μs` | 🏆 **27.5% less** | 🏆 **32.0% less** | 🏆 **Excellent** |
+| 🔢 **Number Processing** | 📊 Standard | `256 B / 1000000 OP` | `9` | `1.2μs` | - | - | - |
+| | 🚀 fmt | `320 B / 408337 OP` | `17` | `3.1μs` | ⚠️ **25.0% more** | ❌ **88.9% more** | ❌ **Poor** |
+| 🔄 **Mixed Operations** | 📊 Standard | `208 B / 603613 OP` | `12` | `1.9μs` | - | - | - |
+| | 🚀 fmt | `176 B / 171735 OP` | `12` | `6.0μs` | ✅ **15.4% less** | ➖ **Same** | ✅ **Good** |
 
 ### 🎯 Performance Summary
 
-- 💾 **Memory Efficiency**: 🏆 **Excellent** (Lower memory usage) (-48.7% average change)
-- 🔢 **Allocation Efficiency**: 🏆 **Excellent** (Fewer allocations) (-45.6% average change)
+- 💾 **Memory Efficiency**: ✅ **Good** (Memory efficient) (-6.0% average change)
+- 🔢 **Allocation Efficiency**: ⚠️ **Caution** (More allocations) (19.0% average change)
 - 📊 **Benchmarks Analyzed**: 3 categories
 - 🎯 **Optimization Focus**: Binary size reduction vs runtime efficiency
 

@@ -30,15 +30,15 @@ Enable Go WebAssembly adoption by reducing binary size while providing essential
 import "webtyp.com/fmt"
 
 // Basic string processing
-result := tinystring.Convert("MÍ téxtO").Tilde().String()
+result := webtyp.Convert("MÍ téxtO").Tilde().String()
 // Output: "MI textO"
 
 // Type conversion and chaining
-result := tinystring.Convert(42).ToUpper().String()
+result := webtyp.Convert(42).ToUpper().String()
 // Output: "42"
 
 // Complex chaining
-result := tinystring.Convert("Él Múrcielago Rápido")
+result := webtyp.Convert("Él Múrcielago Rápido")
     .Tilde()
     .CamelLow()
     .String()
@@ -46,7 +46,7 @@ result := tinystring.Convert("Él Múrcielago Rápido")
 
 // Memory optimization with pointers
 text := "Él Múrcielago Rápido"
-tinystring.Convert(&text).Tilde().CamelLow().Apply()
+webtyp.Convert(&text).Tilde().CamelLow().Apply()
 // text is now: "elMurcielagoRapido"
 ```
 

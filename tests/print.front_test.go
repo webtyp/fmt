@@ -1,10 +1,11 @@
 //go:build wasm
 
-package fmt
+package fmt_test
 
 import (
 	"syscall/js"
 	"testing"
+	. "webtyp.com/fmt"
 )
 
 // testLastOutput stores the last output for testing
