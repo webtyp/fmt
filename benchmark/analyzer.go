@@ -249,7 +249,20 @@ func runMemoryBenchmarks() []MemoryComparison {
 	LogInfo("Running fmt memory benchmarks...")
 	webtypResults := runBenchmarks("webtyp")
 
-	// Create comparisons
+	// Create comparisons. A category missing on either side means its line was
+	// not parsed: stop instead of writing a README that silently drops it.
+	for _, name := range []string{"BenchmarkStringProcessing", "BenchmarkNumberProcessing", "BenchmarkMixedOperations"} {
+		for _, side := range []struct {
+			library string
+			results []BenchmarkResult
+		}{{"standard", standardResults}, {"webtyp", webtypResults}} {
+			if findBenchmark(side.results, name).Name == "" {
+				LogError(Sprintf("%s was not found in the %s results, so the README was not updated. Run `go test -bench . -benchmem` in bench-memory-alloc/%s and check that its output line ends in ns/op, B/op and allocs/op.", name, side.library, side.library))
+				os.Exit(1)
+			}
+		}
+	}
+
 	comparisons = append(comparisons, createComparison(
 		"String Processing",
 		findBenchmark(standardResults, "BenchmarkStringProcessing"),
@@ -308,14 +321,16 @@ func parseBenchmarkOutput(output, library string) []BenchmarkResult {
 	var results []BenchmarkResult
 
 	scanner := bufio.NewScanner(strings.NewReader(output))
-	benchmarkRegex := regexp.MustCompile(`^(Benchmark\w+)(?:-\d+)?\s+(\d+)\s+(\d+)\s+ns/op\s+(\d+)\s+B/op\s+(\d+)\s+allocs/op`)
+	benchmarkRegex := regexp.MustCompile(`^(Benchmark\w+)(?:-\d+)?\s+(\d+)\s+([\d.]+)\s+ns/op\s+(\d+)\s+B/op\s+(\d+)\s+allocs/op`)
 	for scanner.Scan() {
 		line := scanner.Text()
 		matches := benchmarkRegex.FindStringSubmatch(line)
 
 		if len(matches) == 6 {
 			iterations, _ := Convert(matches[2]).Int64()
-			nsPerOp, _ := Convert(matches[3]).Int64()
+			// go test prints ns/op with decimals below 1000 (e.g. "406.0 ns/op").
+			nsFloat, _ := Convert(matches[3]).Float64()
+			nsPerOp := int64(nsFloat + 0.5)
 			bytesPerOp, _ := Convert(matches[4]).Int64()
 			allocsPerOp, _ := Convert(matches[5]).Int64()
 

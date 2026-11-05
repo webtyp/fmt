@@ -9,7 +9,7 @@ Automated benchmark tools to measure and compare performance between standard Go
 [Standard Library Example](bench-binary-size/standard-lib/main.go) | [fmt Example](bench-binary-size/webtyp-lib/main.go)
 
 <!-- This table is automatically generated from build-and-measure.sh -->
-*Last updated: 2026-10-07 21:15:18*
+*Last updated: 2026-11-05 12:43:26*
 
 | Build Type | Parameters | Standard Library<br/>`go build` | fmt<br/>`tinygo build` | Size Reduction | Performance |
 |------------|------------|------------------|------------|----------------|-------------|
@@ -38,18 +38,18 @@ Automated benchmark tools to measure and compare performance between standard Go
 [Standard Library Example](bench-memory-alloc/standard) | [fmt Example](bench-memory-alloc/webtyp)
 
 <!-- This table is automatically generated from memory-benchmark.sh -->
-*Last updated: 2026-10-07 21:15:34*
+*Last updated: 2026-11-05 12:49:56*
 
 Performance benchmarks comparing memory allocation patterns between standard Go library and fmt:
 
 | 🧪 **Benchmark Category** | 📚 **Library** | 💾 **Memory/Op** | 🔢 **Allocs/Op** | ⏱️ **Time/Op** | 📈 **Memory Trend** | 🎯 **Alloc Trend** | 🏆 **Performance** |
 |----------------------------|----------------|-------------------|-------------------|-----------------|---------------------|---------------------|--------------------|
-| 📝 **String Processing** | 📊 Standard | `640 B / 320149 OP` | `25` | `3.4μs` | - | - | - |
-| | 🚀 fmt | `464 B / 84074 OP` | `17` | `13.5μs` | 🏆 **27.5% less** | 🏆 **32.0% less** | 🏆 **Excellent** |
-| 🔢 **Number Processing** | 📊 Standard | `256 B / 1000000 OP` | `9` | `1.2μs` | - | - | - |
-| | 🚀 fmt | `320 B / 408337 OP` | `17` | `3.1μs` | ⚠️ **25.0% more** | ❌ **88.9% more** | ❌ **Poor** |
-| 🔄 **Mixed Operations** | 📊 Standard | `208 B / 603613 OP` | `12` | `1.9μs` | - | - | - |
-| | 🚀 fmt | `176 B / 171735 OP` | `12` | `6.0μs` | ✅ **15.4% less** | ➖ **Same** | ✅ **Good** |
+| 📝 **String Processing** | 📊 Standard | `640 B / 925741 OP` | `25` | `1.2μs` | - | - | - |
+| | 🚀 fmt | `464 B / 244772 OP` | `17` | `4.8μs` | 🏆 **27.5% less** | 🏆 **32.0% less** | 🏆 **Excellent** |
+| 🔢 **Number Processing** | 📊 Standard | `256 B / 2994324 OP` | `9` | `398ns` | - | - | - |
+| | 🚀 fmt | `320 B / 1202761 OP` | `17` | `1.0μs` | ⚠️ **25.0% more** | ❌ **88.9% more** | ❌ **Poor** |
+| 🔄 **Mixed Operations** | 📊 Standard | `208 B / 1773916 OP` | `12` | `682ns` | - | - | - |
+| | 🚀 fmt | `176 B / 554125 OP` | `12` | `2.1μs` | ✅ **15.4% less** | ➖ **Same** | ✅ **Good** |
 
 ### 🎯 Performance Summary
 
@@ -121,9 +121,7 @@ The benchmarks reveal important trade-offs between **binary size** and **runtime
 
 **Target**: Achieve memory usage close to standard library while maintaining binary size benefits.
 
-**Latest Results** (Run `./build-and-measure.sh` to update):
-- ✅ **Binary Size**: fmt is 20-50% smaller than stdlib for WebAssembly.
-- ⚠️ **Memory Usage**: Number Processing uses 1000% more memory (needs optimization).
+**Latest Results**: the two generated tables above are the only source of numbers (run `./build-and-measure.sh` to refresh them). In short: fmt is much smaller in WebAssembly, uses less memory in string work, and is slower per operation on the server; Number Processing still allocates more than the standard library and is the next optimization target.
 
 📋 **Memory Optimization Guide**: See [`MEMORY_REDUCTION.md`](./MEMORY_REDUCTION.md) for comprehensive techniques and best practices to replace Go standard libraries with fmt's optimized implementations. Essential reading for efficient string and numeric processing in TinyGo WebAssembly applications.
 
