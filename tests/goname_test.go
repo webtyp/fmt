@@ -87,11 +87,12 @@ func TestSeparatorUnification(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
 			var got string
-			if tt.want == "first-name" {
+			switch tt.want {
+			case "first-name":
 				got = tf.Convert(tt.input).SnakeLow("-").String()
-			} else if tt.want == "UserId" {
+			case "UserId":
 				got = tf.Convert(tt.input).CamelUp().String()
-			} else {
+			default:
 				got = tf.Convert(tt.input).SnakeLow().String()
 			}
 

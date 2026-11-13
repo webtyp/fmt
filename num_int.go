@@ -158,10 +158,7 @@ func (c *Conv) WrIntBase(dest BuffDest, val int64, base int, signed bool, upper 
 	if negative {
 		uval = -val
 	}
-	useUpper := false
-	if len(upper) > 0 && upper[0] {
-		useUpper = true
-	}
+	useUpper := len(upper) > 0 && upper[0]
 	var digits string
 	if useUpper {
 		digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"

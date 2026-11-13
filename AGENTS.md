@@ -65,7 +65,7 @@ gopush 'message'   # tests + tag + push + dependency bumps (NOT git commit/push 
 
 ## Related
 
-- [`webtyp/orm`](https://github.com/webtyp/orm) — `ormc` generates `Schema()`/`Pointers()`
+- [`webtyp/orm`](https://github.com/webtyp/orm) — `definitionc` generates `Schema()`/`Pointers()`
   and the codec's `EncodeFields`/`DecodeFields`.
 - [`webtyp/json`](https://github.com/webtyp/json), [`webtyp/jsvalue`](https://github.com/webtyp/jsvalue)
   — concrete codec encoders (JSON, JS).

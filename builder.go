@@ -38,11 +38,8 @@ func (c *Conv) Write(v any) *Conv {
 
 	// BUILDER INTEGRATION: Only transfer initial value if buffer is empty
 	// and we have a stored value that hasn't been converted yet
-	if c.outLen == 0 && c.dataPtr != nil {
-		// Convert current value to buffer using AnyToBuff() - need to reconstruct any
-		// For now, skip this optimization until we implement proper unsafe reconstruction
-		// TODO: Implement unsafe.Pointer to any reconstruction
-	}
+	// The optimization is not implemented yet (it needs an unsafe.Pointer to any
+	// reconstruction), so a stored value is converted by the path below.
 
 	// Use unified AnyToBuff() function to append new value
 	c.AnyToBuff(BuffOut, v)

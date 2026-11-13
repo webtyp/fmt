@@ -21,10 +21,7 @@ func (t *Conv) Round(decimals int, down ...bool) *Conv {
 	if t.hasContent(BuffErr) {
 		return t
 	}
-	roundDown := false
-	if len(down) > 0 && down[0] {
-		roundDown = true
-	}
+	roundDown := len(down) > 0 && down[0]
 	t.applyRoundingToNumber(BuffOut, decimals, roundDown)
 	// If the result is not numeric, set to zero with correct decimals
 	str := t.GetString(BuffOut)

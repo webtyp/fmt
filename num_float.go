@@ -120,9 +120,10 @@ func (c *Conv) parseFloatBase() float64 {
 			return 0
 		}
 		expNeg := false
-		if s[i] == '+' {
+		switch s[i] {
+		case '+':
 			i++
-		} else if s[i] == '-' {
+		case '-':
 			expNeg = true
 			i++
 		}

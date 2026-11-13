@@ -165,15 +165,17 @@ func (c *Conv) wrFormat(dest BuffDest, format string, args ...any) *Conv {
 // Returns formatChar, param, formatSpec, width, leftAlign, zeroPad, and new index position
 func (c *Conv) parseFormatSpecifier(format string, i int) (formatChar rune, param int, formatSpec string, width int, leftAlign bool, zeroPad bool, newI int) {
 	// Parse flags
+flags:
 	for i < len(format) {
-		if format[i] == '-' {
+		switch format[i] {
+		case '-':
 			leftAlign = true
 			i++
-		} else if format[i] == '0' {
+		case '0':
 			zeroPad = true
 			i++
-		} else {
-			break
+		default:
+			break flags
 		}
 	}
 	// Parse width

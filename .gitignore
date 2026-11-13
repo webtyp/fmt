@@ -16,3 +16,4 @@ example/*.log
 *.code-workspace
 server
 coverage*benchmark/analyzer
+coverage.out
