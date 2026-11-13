@@ -6,7 +6,7 @@ import (
 	. "webtyp.com/fmt"
 )
 
-func TestTildeRemovesSpanishAccents(t *testing.T) {
+func TestRemoveAccentsRemovesSpanishAccents(t *testing.T) {
 	cases := map[string]string{
 		"Lucía":       "Lucia",
 		"Hóla Múndo":  "Hola Mundo",
@@ -16,17 +16,17 @@ func TestTildeRemovesSpanishAccents(t *testing.T) {
 		"Ñandú":       "Ñandu",
 	}
 	for in, want := range cases {
-		if got := Convert(in).Tilde().String(); got != want {
-			t.Errorf("Tilde(%q) = %q, want %q", in, got, want)
+		if got := Convert(in).RemoveAccents().String(); got != want {
+			t.Errorf("RemoveAccents(%q) = %q, want %q", in, got, want)
 		}
 	}
 }
 
-func TestTildeChainsForSearch(t *testing.T) {
-	if got := Convert("Hóla Múndo").Tilde().ToLower().String(); got != "hola mundo" {
-		t.Errorf("Tilde().ToLower() = %q, want %q", got, "hola mundo")
+func TestRemoveAccentsChainsForSearch(t *testing.T) {
+	if got := Convert("Hóla Múndo").RemoveAccents().ToLower().String(); got != "hola mundo" {
+		t.Errorf("RemoveAccents().ToLower() = %q, want %q", got, "hola mundo")
 	}
-	if got := Convert("").Tilde().String(); got != "" {
+	if got := Convert("").RemoveAccents().String(); got != "" {
 		t.Errorf("empty text = %q", got)
 	}
 }

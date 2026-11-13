@@ -1,12 +1,12 @@
 package fmt
 
-// Tilde removes the accents of the Spanish vowels (á é í ó ú ü, both cases) and
-// returns the text without them: "Lucía" → "Lucia". It is the accent-insensitive
-// form used to compare names, not a transliteration: letters outside the table
-// (ñ, ç) are kept. Chainable like the other Conv methods:
+// RemoveAccents removes the accents of the Spanish vowels (á é í ó ú ü, both
+// cases) and returns the text without them: "Lucía" → "Lucia". It is the
+// accent-insensitive form used to compare names, not a transliteration: letters
+// outside the table (ñ, ç) are kept. Chainable like the other Conv methods:
 //
-//	Convert("Hóla Múndo").Tilde().ToLower().String() // "hola mundo"
-func (t *Conv) Tilde() *Conv {
+//	Convert("Hóla Múndo").RemoveAccents().ToLower().String() // "hola mundo"
+func (t *Conv) RemoveAccents() *Conv {
 	if t.hasContent(BuffErr) || t.outLen == 0 {
 		return t
 	}
